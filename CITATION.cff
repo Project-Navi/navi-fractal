@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "navi-fractal"
+abstract: "Audit-grade fractal dimension estimation for graphs. Refuses to emit without evidence of power-law scaling."
+authors:
+  - family-names: "Spence"
+    given-names: "Nelson"
+license: Apache-2.0
+repository-code: "https://github.com/Project-Navi/navi-fractal"
+version: "0.1.0"
+date-released: "2026-03-01"
+keywords:
+  - fractal dimension
+  - sandbox method
+  - network science
+  - graph analysis
+  - power-law scaling

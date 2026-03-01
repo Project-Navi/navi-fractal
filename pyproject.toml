@@ -1,0 +1,66 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/navi_fractal"]
+
+[project]
+name = "navi-fractal"
+version = "0.1.0"
+description = "Audit-grade fractal dimension estimation for graphs. Refuses to emit without evidence."
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.12"
+authors = [
+    { name = "Nelson Spence" }
+]
+maintainers = [
+    { name = "Nelson Spence" }
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "Typing :: Typed",
+]
+
+[project.urls]
+Repository = "https://github.com/Project-Navi/navi-fractal"
+Issues = "https://github.com/Project-Navi/navi-fractal/issues"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-benchmark>=5.0.0",
+    "ruff>=0.9.0",
+    "mypy>=1.8.0",
+    "bandit>=1.8.0",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP", "B", "RUF", "C4", "S"]
+ignore = ["S311"]  # random is used for center selection, not security
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101"]  # assert is fine in tests
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+
+[tool.bandit]
+exclude_dirs = ["tests"]
+skips = ["B311"]  # random is used for center selection, not security

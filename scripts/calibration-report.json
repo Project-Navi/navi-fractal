@@ -1,0 +1,1001 @@
+{
+  "metadata": {
+    "timestamp": "2026-03-02T09:52:08.814286+00:00",
+    "python_version": "3.12.12",
+    "seed": 42,
+    "total_elapsed_s": 13.9,
+    "corpus_size": 19,
+    "sign_conventions": {
+      "analytical_gap": "measured - analytical (positive = overestimate)",
+      "gap_pct": "100 * (measured - analytical) / analytical",
+      "dimension_delta": "nf - v4 (positive = nf higher)"
+    }
+  },
+  "comparisons": [
+    {
+      "label": "flower_22_gen4",
+      "family": "flower",
+      "group": "flower_22",
+      "expect": "emit",
+      "analytical_d": 2.0,
+      "v4": {
+        "backend": "v4",
+        "dimension": 1.378992,
+        "reason": "accepted: credible scaling window + positive powerlaw evidence",
+        "r2": 0.996576,
+        "slope": 1.378992,
+        "slope_stderr": 0.036149,
+        "window_r_min": 2,
+        "window_r_max": 8,
+        "window_log_span": 1.386294,
+        "window_delta_y": 1.955607,
+        "delta_aicc": 1011.5496,
+        "elapsed_s": 0.0095,
+        "n_nodes": 172
+      },
+      "nf": {
+        "backend": "navi-fractal",
+        "dimension": 1.379703,
+        "reason": "accepted",
+        "r2": 0.996466,
+        "slope": 1.379703,
+        "slope_stderr": 0.000113,
+        "window_r_min": 2,
+        "window_r_max": 8,
+        "window_log_span": 1.386294,
+        "window_delta_y": 1.953672,
+        "delta_aicc": 1014.712,
+        "elapsed_s": 0.0218,
+        "n_nodes": 172
+      },
+      "deltas": {
+        "dimension_delta": 0.000712,
+        "r2_delta": -0.00011,
+        "analytical_gap_v4": -0.621008,
+        "analytical_gap_nf": -0.620297,
+        "gap_pct_v4": -31.0504,
+        "gap_pct_nf": -31.0148
+      }
+    },
+    {
+      "label": "flower_22_gen5",
+      "family": "flower",
+      "group": "flower_22",
+      "expect": "emit",
+      "analytical_d": 2.0,
+      "v4": {
+        "backend": "v4",
+        "dimension": 1.632513,
+        "reason": "accepted: credible scaling window + positive powerlaw evidence",
+        "r2": 0.996184,
+        "slope": 1.632513,
+        "slope_stderr": 0.045184,
+        "window_r_min": 2,
+        "window_r_max": 8,
+        "window_log_span": 1.386294,
+        "window_delta_y": 2.280165,
+        "delta_aicc": 301.4033,
+        "elapsed_s": 0.0164,
+        "n_nodes": 684
+      },
+      "nf": {
+        "backend": "navi-fractal",
+        "dimension": 1.635364,
+        "reason": "accepted",
+        "r2": 0.996154,
+        "slope": 1.635364,
+        "slope_stderr": 0.000779,
+        "window_r_min": 2,
+        "window_r_max": 8,
+        "window_log_span": 1.386294,
+        "window_delta_y": 2.283891,
+        "delta_aicc": 305.9766,
+        "elapsed_s": 0.0752,
+        "n_nodes": 684
+      },
+      "deltas": {
+        "dimension_delta": 0.002851,
+        "r2_delta": -3e-05,
+        "analytical_gap_v4": -0.367487,
+        "analytical_gap_nf": -0.364636,
+        "gap_pct_v4": -18.3744,
+        "gap_pct_nf": -18.2318
+      }
+    },
+    {
+      "label": "flower_22_gen6",
+      "family": "flower",
+      "group": "flower_22",
+      "expect": "emit",
+      "analytical_d": 2.0,
+      "v4": {
+        "backend": "v4",
+        "dimension": 1.685542,
+        "reason": "accepted: credible scaling window + positive powerlaw evidence",
+        "r2": 0.99766,
+        "slope": 1.685542,
+        "slope_stderr": 0.027212,
+        "window_r_min": 2,
+        "window_r_max": 12,
+        "window_log_span": 1.791759,
+        "window_delta_y": 3.052545,
+        "delta_aicc": 637.7476,
+        "elapsed_s": 0.0473,
+        "n_nodes": 2732
+      },
+      "nf": {
+        "backend": "navi-fractal",
+        "dimension": 1.689731,
+        "reason": "accepted",
+        "r2": 0.997652,
+        "slope": 1.689731,
+        "slope_stderr": 0.000652,
+        "window_r_min": 2,
+        "window_r_max": 12,
+        "window_log_span": 1.791759,
+        "window_delta_y": 3.058382,
+        "delta_aicc": 648.5225,
+        "elapsed_s": 0.3507,
+        "n_nodes": 2732
+      },
+      "deltas": {
+        "dimension_delta": 0.004189,
+        "r2_delta": -7e-06,
+        "analytical_gap_v4": -0.314458,
+        "analytical_gap_nf": -0.310269,
+        "gap_pct_v4": -15.7229,
+        "gap_pct_nf": -15.5134
+      }
+    },
+    {
+      "label": "flower_22_gen7",
+      "family": "flower",
+      "group": "flower_22",
+      "expect": "emit",
+      "analytical_d": 2.0,
+      "v4": {
+        "backend": "v4",
+        "dimension": 1.880968,
+        "reason": "accepted: credible scaling window + positive powerlaw evidence",
+        "r2": 0.999199,
+        "slope": 1.880968,
+        "slope_stderr": 0.016841,
+        "window_r_min": 1,
+        "window_r_max": 16,
+        "window_log_span": 2.772589,
+        "window_delta_y": 5.203,
+        "delta_aicc": 5404.2629,
+        "elapsed_s": 0.1713,
+        "n_nodes": 10924
+      },
+      "nf": {
+        "backend": "navi-fractal",
+        "dimension": 1.87997,
+        "reason": "accepted",
+        "r2": 0.999186,
+        "slope": 1.87997,
+        "slope_stderr": 0.000511,
+        "window_r_min": 1,
+        "window_r_max": 16,
+        "window_log_span": 2.772589,
+        "window_delta_y": 5.200236,
+        "delta_aicc": 5406.3907,
+        "elapsed_s": 1.4623,
+        "n_nodes": 10924
+      },
+      "deltas": {
+        "dimension_delta": -0.000998,
+        "r2_delta": -1.3e-05,
+        "analytical_gap_v4": -0.119032,
+        "analytical_gap_nf": -0.12003,
+        "gap_pct_v4": -5.9516,
+        "gap_pct_nf": -6.0015
+      }
+    },
+    {
+      "label": "flower_22_gen8",
+      "family": "flower",
+      "group": "flower_22",
+      "expect": "emit",
+      "analytical_d": 2.0,
+      "v4": {
+        "backend": "v4",
+        "dimension": 1.811704,
+        "reason": "accepted: credible scaling window + positive powerlaw evidence",
+        "r2": 0.999434,
+        "slope": 1.811704,
+        "slope_stderr": 0.011958,
+        "window_r_min": 2,
+        "window_r_max": 32,
+        "window_log_span": 2.772589,
+        "window_delta_y": 5.072158,
+        "delta_aicc": 2686.3204,
+        "elapsed_s": 0.5037,
+        "n_nodes": 43692
+      },
+      "nf": {
+        "backend": "navi-fractal",
+        "dimension": 1.810482,
+        "reason": "accepted",
+        "r2": 0.999436,
+        "slope": 1.810482,
+        "slope_stderr": 0.00042,
+        "window_r_min": 2,
+        "window_r_max": 32,
+        "window_log_span": 2.772589,
+        "window_delta_y": 5.070753,
+        "delta_aicc": 2679.67,
+        "elapsed_s": 6.3052,
+        "n_nodes": 43692
+      },
+      "deltas": {
+        "dimension_delta": -0.001223,
+        "r2_delta": 2e-06,
+        "analytical_gap_v4": -0.188296,
+        "analytical_gap_nf": -0.189518,
+        "gap_pct_v4": -9.4148,
+        "gap_pct_nf": -9.4759
+      }
+    },
+    {
+      "label": "flower_33_gen3",
+      "family": "flower",
+      "group": "flower_33",
+      "expect": "emit",
+      "analytical_d": 1.63093,
+      "v4": {
+        "backend": "v4",
+        "dimension": 1.313461,
+        "reason": "accepted: credible scaling window + positive powerlaw evidence",
+        "r2": 0.99961,
+        "slope": 1.313461,
+        "slope_stderr": 0.011597,
+        "window_r_min": 1,
+        "window_r_max": 7,
+        "window_log_span": 1.94591,
+        "window_delta_y": 2.561107,
+        "delta_aicc": 2735.8906,
+        "elapsed_s": 0.0069,
+        "n_nodes": 174
+      },
+      "nf": {
+        "backend": "navi-fractal",
+        "dimension": 1.313461,
+        "reason": "accepted",
+        "r2": 0.99961,
+        "slope": 1.313461,
+        "slope_stderr": 4.9e-05,
+        "window_r_min": 1,
+        "window_r_max": 7,
+        "window_log_span": 1.94591,
+        "window_delta_y": 2.561107,
+        "delta_aicc": 2735.8906,
+        "elapsed_s": 0.0204,
+        "n_nodes": 174
+      },
+      "deltas": {
+        "dimension_delta": 0.0,
+        "r2_delta": 0.0,
+        "analytical_gap_v4": -0.317469,
+        "analytical_gap_nf": -0.317469,
+        "gap_pct_v4": -19.4655,
+        "gap_pct_nf": -19.4655
+      }
+    },
+    {
+      "label": "flower_33_gen4",
+      "family": "flower",
+      "group": "flower_33",
+      "expect": "emit",
+      "analytical_d": 1.63093,
+      "v4": {
+        "backend": "v4",
+        "dimension": 1.417986,
+        "reason": "accepted: credible scaling window + positive powerlaw evidence",
+        "r2": 0.999253,
+        "slope": 1.417986,
+        "slope_stderr": 0.011689,
+        "window_r_min": 1,
+        "window_r_max": 16,
+        "window_log_span": 2.772589,
+        "window_delta_y": 3.914984,
+        "delta_aicc": 9558.9244,
+        "elapsed_s": 0.021,
+        "n_nodes": 1038
+      },
+      "nf": {
+        "backend": "navi-fractal",
+        "dimension": 1.417644,
+        "reason": "accepted",
+        "r2": 0.999257,
+        "slope": 1.417644,
+        "slope_stderr": 0.000171,
+        "window_r_min": 1,
+        "window_r_max": 16,
+        "window_log_span": 2.772589,
+        "window_delta_y": 3.914421,
+        "delta_aicc": 9539.4904,
+        "elapsed_s": 0.1271,
+        "n_nodes": 1038
+      },
+      "deltas": {
+        "dimension_delta": -0.000342,
+        "r2_delta": 4e-06,
+        "analytical_gap_v4": -0.212943,
+        "analytical_gap_nf": -0.213286,
+        "gap_pct_v4": -13.0566,
+        "gap_pct_nf": -13.0775
+      }
+    },
+    {
+      "label": "flower_33_gen5",
+      "family": "flower",
+      "group": "flower_33",
+      "expect": "emit",
+      "analytical_d": 1.63093,
+      "v4": {
+        "backend": "v4",
+        "dimension": 1.495164,
+        "reason": "accepted: credible scaling window + positive powerlaw evidence",
+        "r2": 0.999849,
+        "slope": 1.495164,
+        "slope_stderr": 0.004912,
+        "window_r_min": 1,
+        "window_r_max": 32,
+        "window_log_span": 3.465736,
+        "window_delta_y": 5.149062,
+        "delta_aicc": 13752.0698,
+        "elapsed_s": 0.062,
+        "n_nodes": 6222
+      },
+      "nf": {
+        "backend": "navi-fractal",
+        "dimension": 1.494835,
+        "reason": "accepted",
+        "r2": 0.99985,
+        "slope": 1.494835,
+        "slope_stderr": 0.000107,
+        "window_r_min": 1,
+        "window_r_max": 32,
+        "window_log_span": 3.465736,
+        "window_delta_y": 5.148007,
+        "delta_aicc": 13714.8043,
+        "elapsed_s": 0.7601,
+        "n_nodes": 6222
+      },
+      "deltas": {
+        "dimension_delta": -0.000329,
+        "r2_delta": 1e-06,
+        "analytical_gap_v4": -0.135766,
+        "analytical_gap_nf": -0.136095,
+        "gap_pct_v4": -8.3245,
+        "gap_pct_nf": -8.3446
+      }
+    },
+    {
+      "label": "flower_44_gen3",
+      "family": "flower",
+      "group": "flower_44",
+      "expect": "emit",
+      "analytical_d": 1.5,
+      "v4": {
+        "backend": "v4",
+        "dimension": 1.294768,
+        "reason": "accepted: credible scaling window + positive powerlaw evidence",
+        "r2": 0.99856,
+        "slope": 1.294768,
+        "slope_stderr": 0.013636,
+        "window_r_min": 1,
+        "window_r_max": 17,
+        "window_log_span": 2.833213,
+        "window_delta_y": 3.617673,
+        "delta_aicc": 32565.1702,
+        "elapsed_s": 0.0115,
+        "n_nodes": 440
+      },
+      "nf": {
+        "backend": "navi-fractal",
+        "dimension": 1.294286,
+        "reason": "accepted",
+        "r2": 0.998585,
+        "slope": 1.294286,
+        "slope_stderr": 3.1e-05,
+        "window_r_min": 1,
+        "window_r_max": 17,
+        "window_log_span": 2.833213,
+        "window_delta_y": 3.617737,
+        "delta_aicc": 32531.9804,
+        "elapsed_s": 0.0567,
+        "n_nodes": 440
+      },
+      "deltas": {
+        "dimension_delta": -0.000482,
+        "r2_delta": 2.5e-05,
+        "analytical_gap_v4": -0.205232,
+        "analytical_gap_nf": -0.205714,
+        "gap_pct_v4": -13.6821,
+        "gap_pct_nf": -13.7142
+      }
+    },
+    {
+      "label": "flower_44_gen4",
+      "family": "flower",
+      "group": "flower_44",
+      "expect": "emit",
+      "analytical_d": 1.5,
+      "v4": {
+        "backend": "v4",
+        "dimension": 1.397727,
+        "reason": "accepted: credible scaling window + positive powerlaw evidence",
+        "r2": 0.999152,
+        "slope": 1.397727,
+        "slope_stderr": 0.011295,
+        "window_r_min": 2,
+        "window_r_max": 32,
+        "window_log_span": 2.772589,
+        "window_delta_y": 3.878917,
+        "delta_aicc": 9332.3231,
+        "elapsed_s": 0.0309,
+        "n_nodes": 3512
+      },
+      "nf": {
+        "backend": "navi-fractal",
+        "dimension": 1.398478,
+        "reason": "accepted",
+        "r2": 0.999151,
+        "slope": 1.398478,
+        "slope_stderr": 0.000178,
+        "window_r_min": 2,
+        "window_r_max": 32,
+        "window_log_span": 2.772589,
+        "window_delta_y": 3.879736,
+        "delta_aicc": 9342.2594,
+        "elapsed_s": 0.4147,
+        "n_nodes": 3512
+      },
+      "deltas": {
+        "dimension_delta": 0.000751,
+        "r2_delta": -1e-06,
+        "analytical_gap_v4": -0.102273,
+        "analytical_gap_nf": -0.101522,
+        "gap_pct_v4": -6.8182,
+        "gap_pct_nf": -6.7681
+      }
+    },
+    {
+      "label": "flower_23_gen4",
+      "family": "flower",
+      "group": "flower_23",
+      "expect": "emit",
+      "analytical_d": 2.321928,
+      "v4": {
+        "backend": "v4",
+        "dimension": 1.668659,
+        "reason": "accepted: credible scaling window + positive powerlaw evidence",
+        "r2": 0.999835,
+        "slope": 1.668659,
+        "slope_stderr": 0.006781,
+        "window_r_min": 1,
+        "window_r_max": 12,
+        "window_log_span": 2.484907,
+        "window_delta_y": 4.11473,
+        "delta_aicc": 7156.9709,
+        "elapsed_s": 0.0134,
+        "n_nodes": 470
+      },
+      "nf": {
+        "backend": "navi-fractal",
+        "dimension": 1.669642,
+        "reason": "accepted",
+        "r2": 0.999831,
+        "slope": 1.669642,
+        "slope_stderr": 8.3e-05,
+        "window_r_min": 1,
+        "window_r_max": 12,
+        "window_log_span": 2.484907,
+        "window_delta_y": 4.116744,
+        "delta_aicc": 7175.4152,
+        "elapsed_s": 0.0508,
+        "n_nodes": 470
+      },
+      "deltas": {
+        "dimension_delta": 0.000983,
+        "r2_delta": -4e-06,
+        "analytical_gap_v4": -0.653269,
+        "analytical_gap_nf": -0.652286,
+        "gap_pct_v4": -28.1348,
+        "gap_pct_nf": -28.0924
+      }
+    },
+    {
+      "label": "flower_23_gen5",
+      "family": "flower",
+      "group": "flower_23",
+      "expect": "emit",
+      "analytical_d": 2.321928,
+      "v4": {
+        "backend": "v4",
+        "dimension": 1.881844,
+        "reason": "accepted: credible scaling window + positive powerlaw evidence",
+        "r2": 0.999532,
+        "slope": 1.881844,
+        "slope_stderr": 0.011749,
+        "window_r_min": 2,
+        "window_r_max": 16,
+        "window_log_span": 2.079442,
+        "window_delta_y": 3.8481,
+        "delta_aicc": 2576.4413,
+        "elapsed_s": 0.0357,
+        "n_nodes": 2345
+      },
+      "nf": {
+        "backend": "navi-fractal",
+        "dimension": 1.880839,
+        "reason": "accepted",
+        "r2": 0.999554,
+        "slope": 1.880839,
+        "slope_stderr": 0.000223,
+        "window_r_min": 2,
+        "window_r_max": 16,
+        "window_log_span": 2.079442,
+        "window_delta_y": 3.849569,
+        "delta_aicc": 2574.4871,
+        "elapsed_s": 0.3321,
+        "n_nodes": 2345
+      },
+      "deltas": {
+        "dimension_delta": -0.001005,
+        "r2_delta": 2.1e-05,
+        "analytical_gap_v4": -0.440084,
+        "analytical_gap_nf": -0.441089,
+        "gap_pct_v4": -18.9534,
+        "gap_pct_nf": -18.9967
+      }
+    },
+    {
+      "label": "flower_23_gen6",
+      "family": "flower",
+      "group": "flower_23",
+      "expect": "emit",
+      "analytical_d": 2.321928,
+      "v4": {
+        "backend": "v4",
+        "dimension": 1.991089,
+        "reason": "accepted: credible scaling window + positive powerlaw evidence",
+        "r2": 0.99964,
+        "slope": 1.991089,
+        "slope_stderr": 0.010484,
+        "window_r_min": 2,
+        "window_r_max": 32,
+        "window_log_span": 2.772589,
+        "window_delta_y": 5.454712,
+        "delta_aicc": 9231.3077,
+        "elapsed_s": 0.1863,
+        "n_nodes": 11720
+      },
+      "nf": {
+        "backend": "navi-fractal",
+        "dimension": 1.991734,
+        "reason": "accepted",
+        "r2": 0.99964,
+        "slope": 1.991734,
+        "slope_stderr": 0.000226,
+        "window_r_min": 2,
+        "window_r_max": 32,
+        "window_log_span": 2.772589,
+        "window_delta_y": 5.454663,
+        "delta_aicc": 9221.6539,
+        "elapsed_s": 1.4813,
+        "n_nodes": 11720
+      },
+      "deltas": {
+        "dimension_delta": 0.000645,
+        "r2_delta": -0.0,
+        "analytical_gap_v4": -0.330839,
+        "analytical_gap_nf": -0.330194,
+        "gap_pct_v4": -14.2485,
+        "gap_pct_nf": -14.2207
+      }
+    },
+    {
+      "label": "flower_12_gen8",
+      "family": "flower",
+      "group": null,
+      "expect": "refuse",
+      "analytical_d": null,
+      "v4": {
+        "backend": "v4",
+        "dimension": null,
+        "reason": "refused: insufficient non-degenerate, non-saturated points",
+        "r2": null,
+        "slope": null,
+        "slope_stderr": null,
+        "window_r_min": null,
+        "window_r_max": null,
+        "window_log_span": null,
+        "window_delta_y": null,
+        "delta_aicc": null,
+        "elapsed_s": 0.2256,
+        "n_nodes": 3282
+      },
+      "nf": {
+        "backend": "navi-fractal",
+        "dimension": null,
+        "reason": "no_valid_radii",
+        "r2": null,
+        "slope": null,
+        "slope_stderr": null,
+        "window_r_min": null,
+        "window_r_max": null,
+        "window_log_span": null,
+        "window_delta_y": null,
+        "delta_aicc": null,
+        "elapsed_s": 0.3572,
+        "n_nodes": 3282
+      },
+      "deltas": {
+        "dimension_delta": null,
+        "r2_delta": null,
+        "analytical_gap_v4": null,
+        "analytical_gap_nf": null,
+        "gap_pct_v4": null,
+        "gap_pct_nf": null
+      }
+    },
+    {
+      "label": "grid_30x30",
+      "family": "grid",
+      "group": null,
+      "expect": "emit",
+      "analytical_d": 2.0,
+      "v4": {
+        "backend": "v4",
+        "dimension": 1.61999,
+        "reason": "accepted: credible scaling window + positive powerlaw evidence",
+        "r2": 0.99986,
+        "slope": 1.61999,
+        "slope_stderr": 0.005536,
+        "window_r_min": 2,
+        "window_r_max": 17,
+        "window_log_span": 2.140066,
+        "window_delta_y": 3.432035,
+        "delta_aicc": 6733.1586,
+        "elapsed_s": 0.0261,
+        "n_nodes": 900
+      },
+      "nf": {
+        "backend": "navi-fractal",
+        "dimension": 1.619653,
+        "reason": "accepted",
+        "r2": 0.999861,
+        "slope": 1.619653,
+        "slope_stderr": 8.1e-05,
+        "window_r_min": 2,
+        "window_r_max": 17,
+        "window_log_span": 2.140066,
+        "window_delta_y": 3.431363,
+        "delta_aicc": 6740.4896,
+        "elapsed_s": 0.1125,
+        "n_nodes": 900
+      },
+      "deltas": {
+        "dimension_delta": -0.000337,
+        "r2_delta": 1e-06,
+        "analytical_gap_v4": -0.38001,
+        "analytical_gap_nf": -0.380347,
+        "gap_pct_v4": -19.0005,
+        "gap_pct_nf": -19.0173
+      }
+    },
+    {
+      "label": "path_100",
+      "family": "path",
+      "group": null,
+      "expect": "emit",
+      "analytical_d": 1.0,
+      "v4": {
+        "backend": "v4",
+        "dimension": 0.873525,
+        "reason": "accepted: credible scaling window + positive powerlaw evidence",
+        "r2": 0.999927,
+        "slope": 0.873525,
+        "slope_stderr": 0.002148,
+        "window_r_min": 3,
+        "window_r_max": 29,
+        "window_log_span": 2.268684,
+        "window_delta_y": 1.963574,
+        "delta_aicc": 5955.3887,
+        "elapsed_s": 0.007,
+        "n_nodes": 100
+      },
+      "nf": {
+        "backend": "navi-fractal",
+        "dimension": 0.873404,
+        "reason": "accepted",
+        "r2": 0.999926,
+        "slope": 0.873404,
+        "slope_stderr": 2e-05,
+        "window_r_min": 3,
+        "window_r_max": 29,
+        "window_log_span": 2.268684,
+        "window_delta_y": 1.963114,
+        "delta_aicc": 5960.3066,
+        "elapsed_s": 0.0156,
+        "n_nodes": 100
+      },
+      "deltas": {
+        "dimension_delta": -0.000121,
+        "r2_delta": -2e-06,
+        "analytical_gap_v4": -0.126475,
+        "analytical_gap_nf": -0.126596,
+        "gap_pct_v4": -12.6475,
+        "gap_pct_nf": -12.6596
+      }
+    },
+    {
+      "label": "ba_n1000_m3",
+      "family": "ba",
+      "group": null,
+      "expect": "refuse",
+      "analytical_d": null,
+      "v4": {
+        "backend": "v4",
+        "dimension": null,
+        "reason": "refused: auto radii has < min_points (5 < 6); diam_est=5",
+        "r2": null,
+        "slope": null,
+        "slope_stderr": null,
+        "window_r_min": null,
+        "window_r_max": null,
+        "window_log_span": null,
+        "window_delta_y": null,
+        "delta_aicc": null,
+        "elapsed_s": 0.0064,
+        "n_nodes": 1000
+      },
+      "nf": {
+        "backend": "navi-fractal",
+        "dimension": null,
+        "reason": "no_valid_radii",
+        "r2": null,
+        "slope": null,
+        "slope_stderr": null,
+        "window_r_min": null,
+        "window_r_max": null,
+        "window_log_span": null,
+        "window_delta_y": null,
+        "delta_aicc": null,
+        "elapsed_s": 0.105,
+        "n_nodes": 1000
+      },
+      "deltas": {
+        "dimension_delta": null,
+        "r2_delta": null,
+        "analytical_gap_v4": null,
+        "analytical_gap_nf": null,
+        "gap_pct_v4": null,
+        "gap_pct_nf": null
+      }
+    },
+    {
+      "label": "er_n500_p01",
+      "family": "er",
+      "group": null,
+      "expect": "refuse",
+      "analytical_d": null,
+      "v4": {
+        "backend": "v4",
+        "dimension": null,
+        "reason": "refused: insufficient non-degenerate, non-saturated points",
+        "r2": null,
+        "slope": null,
+        "slope_stderr": null,
+        "window_r_min": null,
+        "window_r_max": null,
+        "window_log_span": null,
+        "window_delta_y": null,
+        "delta_aicc": null,
+        "elapsed_s": 0.0368,
+        "n_nodes": 500
+      },
+      "nf": {
+        "backend": "navi-fractal",
+        "dimension": null,
+        "reason": "no_valid_radii",
+        "r2": null,
+        "slope": null,
+        "slope_stderr": null,
+        "window_r_min": null,
+        "window_r_max": null,
+        "window_log_span": null,
+        "window_delta_y": null,
+        "delta_aicc": null,
+        "elapsed_s": 0.0634,
+        "n_nodes": 500
+      },
+      "deltas": {
+        "dimension_delta": null,
+        "r2_delta": null,
+        "analytical_gap_v4": null,
+        "analytical_gap_nf": null,
+        "gap_pct_v4": null,
+        "gap_pct_nf": null
+      }
+    },
+    {
+      "label": "complete_k50",
+      "family": "complete",
+      "group": null,
+      "expect": "refuse",
+      "analytical_d": null,
+      "v4": {
+        "backend": "v4",
+        "dimension": null,
+        "reason": "refused: auto radii has < min_points (0 < 6); diam_est=1",
+        "r2": null,
+        "slope": null,
+        "slope_stderr": null,
+        "window_r_min": null,
+        "window_r_max": null,
+        "window_log_span": null,
+        "window_delta_y": null,
+        "delta_aicc": null,
+        "elapsed_s": 0.0012,
+        "n_nodes": 50
+      },
+      "nf": {
+        "backend": "navi-fractal",
+        "dimension": null,
+        "reason": "trivial_graph",
+        "r2": null,
+        "slope": null,
+        "slope_stderr": null,
+        "window_r_min": null,
+        "window_r_max": null,
+        "window_log_span": null,
+        "window_delta_y": null,
+        "delta_aicc": null,
+        "elapsed_s": 0.0004,
+        "n_nodes": 50
+      },
+      "deltas": {
+        "dimension_delta": null,
+        "r2_delta": null,
+        "analytical_gap_v4": null,
+        "analytical_gap_nf": null,
+        "gap_pct_v4": null,
+        "gap_pct_nf": null
+      }
+    }
+  ],
+  "convergence": {
+    "flower_22": {
+      "analytical_d": 2.0,
+      "formula": "ln(4)/ln(2) = ln(4)/ln(2)",
+      "generations": [
+        {
+          "label": "flower_22_gen4",
+          "n_nodes": 172,
+          "v4_dimension": 1.378992,
+          "nf_dimension": 1.379703,
+          "gap_pct_v4": -31.0504,
+          "gap_pct_nf": -31.0148
+        },
+        {
+          "label": "flower_22_gen5",
+          "n_nodes": 684,
+          "v4_dimension": 1.632513,
+          "nf_dimension": 1.635364,
+          "gap_pct_v4": -18.3744,
+          "gap_pct_nf": -18.2318
+        },
+        {
+          "label": "flower_22_gen6",
+          "n_nodes": 2732,
+          "v4_dimension": 1.685542,
+          "nf_dimension": 1.689731,
+          "gap_pct_v4": -15.7229,
+          "gap_pct_nf": -15.5134
+        },
+        {
+          "label": "flower_22_gen7",
+          "n_nodes": 10924,
+          "v4_dimension": 1.880968,
+          "nf_dimension": 1.87997,
+          "gap_pct_v4": -5.9516,
+          "gap_pct_nf": -6.0015
+        },
+        {
+          "label": "flower_22_gen8",
+          "n_nodes": 43692,
+          "v4_dimension": 1.811704,
+          "nf_dimension": 1.810482,
+          "gap_pct_v4": -9.4148,
+          "gap_pct_nf": -9.4759
+        }
+      ]
+    },
+    "flower_33": {
+      "analytical_d": 1.63093,
+      "formula": "ln(6)/ln(3) = ln(6)/ln(3)",
+      "generations": [
+        {
+          "label": "flower_33_gen3",
+          "n_nodes": 174,
+          "v4_dimension": 1.313461,
+          "nf_dimension": 1.313461,
+          "gap_pct_v4": -19.4655,
+          "gap_pct_nf": -19.4655
+        },
+        {
+          "label": "flower_33_gen4",
+          "n_nodes": 1038,
+          "v4_dimension": 1.417986,
+          "nf_dimension": 1.417644,
+          "gap_pct_v4": -13.0566,
+          "gap_pct_nf": -13.0775
+        },
+        {
+          "label": "flower_33_gen5",
+          "n_nodes": 6222,
+          "v4_dimension": 1.495164,
+          "nf_dimension": 1.494835,
+          "gap_pct_v4": -8.3245,
+          "gap_pct_nf": -8.3446
+        }
+      ]
+    },
+    "flower_44": {
+      "analytical_d": 1.5,
+      "formula": "ln(8)/ln(4) = ln(8)/ln(4)",
+      "generations": [
+        {
+          "label": "flower_44_gen3",
+          "n_nodes": 440,
+          "v4_dimension": 1.294768,
+          "nf_dimension": 1.294286,
+          "gap_pct_v4": -13.6821,
+          "gap_pct_nf": -13.7142
+        },
+        {
+          "label": "flower_44_gen4",
+          "n_nodes": 3512,
+          "v4_dimension": 1.397727,
+          "nf_dimension": 1.398478,
+          "gap_pct_v4": -6.8182,
+          "gap_pct_nf": -6.7681
+        }
+      ]
+    },
+    "flower_23": {
+      "analytical_d": 2.321928,
+      "formula": "ln(5)/ln(2) = ln(5)/ln(2)",
+      "generations": [
+        {
+          "label": "flower_23_gen4",
+          "n_nodes": 470,
+          "v4_dimension": 1.668659,
+          "nf_dimension": 1.669642,
+          "gap_pct_v4": -28.1348,
+          "gap_pct_nf": -28.0924
+        },
+        {
+          "label": "flower_23_gen5",
+          "n_nodes": 2345,
+          "v4_dimension": 1.881844,
+          "nf_dimension": 1.880839,
+          "gap_pct_v4": -18.9534,
+          "gap_pct_nf": -18.9967
+        },
+        {
+          "label": "flower_23_gen6",
+          "n_nodes": 11720,
+          "v4_dimension": 1.991089,
+          "nf_dimension": 1.991734,
+          "gap_pct_v4": -14.2485,
+          "gap_pct_nf": -14.2207
+        }
+      ]
+    }
+  }
+}

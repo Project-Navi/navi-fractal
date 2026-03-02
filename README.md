@@ -59,9 +59,28 @@ A dimension is only emitted when **all** gates pass:
 
 | Graph | Expected D | Behavior |
 |-------|-----------|----------|
-| Grid (m x n) | ~2.0 | Emits D in [1.8, 2.2] |
+| Grid (m x n) | ~2.0 | Emits D in [1.55, 1.75] |
 | Path | ~1.0 | Emits D in [0.8, 1.2] |
 | Complete | N/A | **Refused** — no scaling regime |
+
+## Measurement Characteristics
+
+Sandbox dimension estimates are measurements of mass-radius scaling, not box-counting dimension. On finite networks the two converge in the infinite-size limit, but the sandbox algorithm systematically underestimates due to boundary and saturation effects.
+
+**Calibration against (u,v)-flower networks** (Rozenfeld et al. 2007, NJP 9:175) with exact analytical box-counting dimension d_B = ln(u+v)/ln(u):
+
+| Network | Nodes | Analytical d_B | Sandbox D | Gap |
+|---------|-------|----------------|-----------|-----|
+| (2,2)-flower gen 8 | 43,692 | 2.000 | 1.812 | -9.4% |
+| (3,3)-flower gen 5 | 6,222 | 1.631 | 1.495 | -8.3% |
+| (4,4)-flower gen 4 | 3,512 | 1.500 | 1.398 | -6.8% |
+| (2,3)-flower gen 6 | 11,720 | 2.322 | 1.991 | -14.3% |
+
+The bias follows a predictable pattern: symmetric flowers with larger path lengths show smaller gaps because the diameter grows faster relative to node count, giving more scaling regime before saturation. Asymmetric flowers show larger gaps because heterogeneous local structure reduces the effectiveness of center-averaging. This is consistent with published results — Song et al. (2015, Sci. Rep. 5:17628) report similar underestimation for Sierpinski weighted fractal networks.
+
+Non-fractal networks (Barabasi-Albert, Erdos-Renyi, complete graphs) are correctly refused by the quality gates. The (1,2)-flower — a transfractal network with infinite analytical d_B — is also correctly rejected.
+
+See `tests/v4_smoke/` for the full calibration test suite with literature references.
 
 ## License
 

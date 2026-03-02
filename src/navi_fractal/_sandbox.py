@@ -411,7 +411,7 @@ def estimate_sandbox_dimension(
                 continue
 
             # Minimum response range in log-mass
-            delta_y = wy[-1] - wy[0]
+            delta_y = max(wy) - min(wy)
             if delta_y < min_delta_y:
                 continue
 
@@ -528,7 +528,7 @@ def estimate_sandbox_dimension(
     window_r_min_val = radii_eval[w_start]
     window_r_max_val = radii_eval[w_end - 1]
     window_log_span_val = math.log(window_r_max_val) - math.log(window_r_min_val)
-    window_delta_y_val = y_eval[w_end - 1] - y_eval[w_start]
+    window_delta_y_val = max(y_eval[w_start:w_end]) - min(y_eval[w_start:w_end])
 
     # Positive slope guard
     if require_positive_slope and best_fit.slope <= 0:

@@ -67,20 +67,31 @@ A dimension is only emitted when **all** gates pass:
 
 Sandbox dimension estimates are measurements of mass-radius scaling, not box-counting dimension. On finite networks the two converge in the infinite-size limit, but the sandbox algorithm systematically underestimates due to boundary and saturation effects.
 
-**Calibration against (u,v)-flower networks** (Rozenfeld et al. 2007, NJP 9:175) with exact analytical box-counting dimension d_B = ln(u+v)/ln(u):
+**Calibration against (u,v)-flower networks** (Rozenfeld et al. 2007, NJP 9:175) with exact analytical box-counting dimension d_B = ln(u+v)/ln(u). Multi-generation convergence data produced by `scripts/calibrate.py`:
 
-| Network | Nodes | Analytical d_B | Sandbox D | Gap |
-|---------|-------|----------------|-----------|-----|
-| (2,2)-flower gen 8 | 43,692 | 2.000 | 1.812 | -9.4% |
-| (3,3)-flower gen 5 | 6,222 | 1.631 | 1.495 | -8.3% |
-| (4,4)-flower gen 4 | 3,512 | 1.500 | 1.398 | -6.8% |
-| (2,3)-flower gen 6 | 11,720 | 2.322 | 1.991 | -14.3% |
+| Family | Gen | Nodes | Analytical d_B | Sandbox D | Gap |
+|--------|-----|-------|----------------|-----------|-----|
+| (2,2)-flower | 4 | 172 | 2.000 | 1.379 | -31.1% |
+| (2,2)-flower | 5 | 684 | 2.000 | 1.633 | -18.4% |
+| (2,2)-flower | 6 | 2,732 | 2.000 | 1.686 | -15.7% |
+| (2,2)-flower | 7 | 10,924 | 2.000 | 1.881 | -6.0% |
+| (2,2)-flower | 8 | 43,692 | 2.000 | 1.812 | -9.4% |
+| (3,3)-flower | 3 | 174 | 1.631 | 1.314 | -19.5% |
+| (3,3)-flower | 4 | 1,038 | 1.631 | 1.418 | -13.1% |
+| (3,3)-flower | 5 | 6,222 | 1.631 | 1.495 | -8.3% |
+| (4,4)-flower | 3 | 440 | 1.500 | 1.295 | -13.7% |
+| (4,4)-flower | 4 | 3,512 | 1.500 | 1.398 | -6.8% |
+| (2,3)-flower | 4 | 470 | 2.322 | 1.669 | -28.1% |
+| (2,3)-flower | 5 | 2,345 | 2.322 | 1.882 | -19.0% |
+| (2,3)-flower | 6 | 11,720 | 2.322 | 1.991 | -14.2% |
 
-The bias follows a predictable pattern: symmetric flowers with larger path lengths show smaller gaps because the diameter grows faster relative to node count, giving more scaling regime before saturation. Asymmetric flowers show larger gaps because heterogeneous local structure reduces the effectiveness of center-averaging. This is consistent with published results — Song et al. (2015, Sci. Rep. 5:17628) report similar underestimation for Sierpinski weighted fractal networks.
+The bias generally shrinks with network size as expected from finite-size scaling. The (2,2)-flower gen 7→8 reversal (-6.0% → -9.4%) is a genuine measurement characteristic: the window search algorithm selects window [1, 16] at gen 7 (clean small-scale scaling) but [2, 32] at gen 8 (wider window with saturation contamination from hub neighborhoods). The algorithm optimizes local fit quality at each scale, and this objective can diverge from convergence toward the analytical dimension when hub structure and saturation effects scale differently than the power-law regime.
+
+Asymmetric flowers show larger gaps because heterogeneous local structure reduces the effectiveness of center-averaging. This is consistent with published results — Song et al. (2015, Sci. Rep. 5:17628) report similar underestimation for Sierpinski weighted fractal networks.
 
 Non-fractal networks (Barabasi-Albert, Erdos-Renyi, complete graphs) are correctly refused by the quality gates. The (1,2)-flower — a transfractal network with infinite analytical d_B — is also correctly rejected.
 
-See `tests/v4_smoke/` for the full calibration test suite with literature references.
+See `scripts/calibrate.py` for the full calibration instrument and `scripts/calibration-report.json` for the structured baseline report.
 
 ## License
 

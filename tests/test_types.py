@@ -36,6 +36,7 @@ class TestQualityGateReasonEnum:
             "NOT_ACCEPTED",
             "R2_TOO_LOW",
             "STDERR_TOO_HIGH",
+            "LOG_SPAN_TOO_SMALL",
             "RADIUS_RATIO_TOO_SMALL",
             "AICC_MARGIN_TOO_SMALL",
         }

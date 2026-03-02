@@ -46,6 +46,7 @@ class QualityGateReason(enum.Enum):
     NOT_ACCEPTED = "not_accepted"
     R2_TOO_LOW = "r2_too_low"
     STDERR_TOO_HIGH = "stderr_too_high"
+    LOG_SPAN_TOO_SMALL = "log_span_too_small"
     RADIUS_RATIO_TOO_SMALL = "radius_ratio_too_small"
     AICC_MARGIN_TOO_SMALL = "aicc_margin_too_small"
 

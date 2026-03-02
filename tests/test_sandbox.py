@@ -77,6 +77,7 @@ class TestSandboxRefusals:
             seed=42,
             slope_stability_guard=True,
             max_slope_range=0.001,
+            slope_stability_sub_len=3,
         )
         assert result.dimension is None
         assert result.reason == Reason.SLOPE_STABILITY_GUARD
@@ -118,7 +119,7 @@ class TestSandboxEstimation:
         grid = make_grid_graph(30, 30)
         result = estimate_sandbox_dimension(grid, seed=42)
         assert result.dimension is not None
-        assert 1.5 < result.dimension < 2.5
+        assert 1.55 <= result.dimension <= 1.75
 
     def test_result_has_fit(self) -> None:
         grid = make_grid_graph(30, 30)
@@ -185,6 +186,8 @@ class TestQualityGate:
             window_slope_range=None,
             window_aicc_quad_minus_lin=None,
             dimension_ci=None,
+            delta_aicc_ci=None,
+            bootstrap_valid_reps=0,
             radii_eval=(),
             mean_mass_eval=(),
             y_eval=(),
@@ -193,7 +196,7 @@ class TestQualityGate:
             retained_fraction=1.0,
             n_centers=100,
             seed=0,
-            notes=None,
+            notes="",
         )
         with pytest.raises(ValueError, match="Unknown preset"):
             sandbox_quality_gate(fake_result, preset="unknown")
@@ -222,3 +225,107 @@ class TestSlopeStability:
             max_slope_range=0.001,
         )
         assert result.dimension is None
+
+
+class TestNewParameters:
+    def test_user_provided_radii(self) -> None:
+        """Custom radii should bypass auto_radii."""
+        grid = make_grid_graph(30, 30)
+        result = estimate_sandbox_dimension(grid, seed=42, radii=[1, 2, 3, 5, 8, 13])
+        assert result.reason in (
+            Reason.ACCEPTED,
+            Reason.NO_WINDOW_PASSES_R2,
+            Reason.AICC_PREFERS_EXPONENTIAL,
+            Reason.NO_VALID_RADII,
+            Reason.CURVATURE_GUARD,
+        )
+
+    def test_r_cap_parameter(self) -> None:
+        """r_cap should limit max radius from auto_radii."""
+        grid = make_grid_graph(30, 30)
+        result = estimate_sandbox_dimension(grid, seed=42, r_cap=10)
+        if result.radii_eval:
+            assert max(result.radii_eval) <= 10
+
+    def test_delta_quadratic_win_parameter(self) -> None:
+        """Setting delta_quadratic_win very negative should trigger curvature guard."""
+        grid = make_grid_graph(30, 30)
+        # A very negative delta_quadratic_win makes the guard trigger whenever
+        # aicc_quad < aicc_pw - delta_quadratic_win, which is almost always.
+        result = estimate_sandbox_dimension(grid, seed=42, delta_quadratic_win=-1e6)
+        assert result.dimension is None
+        assert result.reason == Reason.CURVATURE_GUARD
+
+    def test_var_floor_parameter(self) -> None:
+        """var_floor parameter should be accepted."""
+        grid = make_grid_graph(30, 30)
+        result = estimate_sandbox_dimension(grid, seed=42, var_floor=1e-3)
+        assert result.dimension is not None
+
+    def test_bootstrap_seed_separate(self) -> None:
+        """Different bootstrap_seed should produce different CIs."""
+        grid = make_grid_graph(20, 20)
+        r1 = estimate_sandbox_dimension(
+            grid,
+            seed=42,
+            bootstrap_reps=50,
+            bootstrap_seed=1,
+        )
+        r2 = estimate_sandbox_dimension(
+            grid,
+            seed=42,
+            bootstrap_reps=50,
+            bootstrap_seed=2,
+        )
+        if r1.dimension is not None and r2.dimension is not None:
+            assert r1.dimension == r2.dimension
+            if r1.dimension_ci is not None and r2.dimension_ci is not None:
+                assert r1.dimension_ci != r2.dimension_ci
+
+    def test_notes_default_empty_string(self) -> None:
+        """notes should default to empty string, not None."""
+        grid = make_grid_graph(30, 30)
+        result = estimate_sandbox_dimension(grid, seed=42)
+        assert result.notes == ""
+
+
+class TestBootstrapImprovements:
+    def test_bootstrap_produces_delta_aicc_ci(self) -> None:
+        """Bootstrap should produce delta_aicc_ci alongside dimension_ci."""
+        grid = make_grid_graph(20, 20)
+        result = estimate_sandbox_dimension(grid, seed=42, bootstrap_reps=50)
+        if result.dimension is not None and result.dimension_ci is not None:
+            assert result.delta_aicc_ci is not None
+            lo, hi = result.delta_aicc_ci
+            assert lo <= hi
+
+    def test_bootstrap_valid_reps_populated(self) -> None:
+        grid = make_grid_graph(20, 20)
+        result = estimate_sandbox_dimension(grid, seed=42, bootstrap_reps=50)
+        if result.dimension_ci is not None:
+            assert result.bootstrap_valid_reps > 0
+
+    def test_bootstrap_min_validity(self) -> None:
+        """With very few reps, bootstrap should not produce CI if too few are valid."""
+        grid = make_grid_graph(20, 20)
+        result = estimate_sandbox_dimension(grid, seed=42, bootstrap_reps=3)
+        # 3 reps < max(10, 0.2*3) = 10, so CI should be None
+        if result.dimension is not None:
+            assert result.dimension_ci is None
+
+    def test_bootstrap_seed_deterministic(self) -> None:
+        """Same bootstrap_seed should produce identical CIs."""
+        grid = make_grid_graph(20, 20)
+        r1 = estimate_sandbox_dimension(
+            grid,
+            seed=42,
+            bootstrap_reps=50,
+            bootstrap_seed=100,
+        )
+        r2 = estimate_sandbox_dimension(
+            grid,
+            seed=42,
+            bootstrap_reps=50,
+            bootstrap_seed=100,
+        )
+        assert r1.dimension_ci == r2.dimension_ci

@@ -8,6 +8,8 @@ but never accepts what the estimator refused.
 
 from __future__ import annotations
 
+import math
+
 from navi_fractal._sandbox import SandboxResult
 from navi_fractal._types import QualityGateReason, Reason
 
@@ -18,6 +20,7 @@ def sandbox_quality_gate(
     preset: str = "inclusive",
     r2_min: float | None = None,
     stderr_max: float | None = None,
+    min_log_span: float | None = None,
     radius_ratio_min: float | None = None,
     aicc_min: float | None = None,
 ) -> tuple[bool, QualityGateReason, str | None]:
@@ -26,15 +29,17 @@ def sandbox_quality_gate(
     Returns (passed, reason, detail).
 
     Presets:
-        "inclusive" --- R2 >= 0.85, stderr <= 0.50, ratio >= 3.0, delta-AICc >= 1.5
-        "strict"   --- R2 >= 0.95, stderr <= 0.20, ratio >= 4.0, delta-AICc >= 3.0
+        "inclusive" --- R2 >= 0.85, stderr <= 0.25, log_span >= log(3),
+                        ratio >= 3.0, delta-AICc >= 1.5
+        "strict"   --- R2 >= 0.95, stderr <= 0.20, log_span >= log(4),
+                        ratio >= 4.0, delta-AICc >= 3.0
 
     All thresholds overridable via keyword arguments.
     """
     if preset == "inclusive":
-        defaults = (0.85, 0.50, 3.0, 1.5)
+        defaults = (0.85, 0.25, 3.0, 1.5, math.log(3.0))
     elif preset == "strict":
-        defaults = (0.95, 0.20, 4.0, 3.0)
+        defaults = (0.95, 0.20, 4.0, 3.0, math.log(4.0))
     else:
         raise ValueError(f"Unknown preset: {preset!r}, expected 'inclusive' or 'strict'")
 
@@ -42,6 +47,7 @@ def sandbox_quality_gate(
     stderr_threshold = stderr_max if stderr_max is not None else defaults[1]
     ratio_threshold = radius_ratio_min if radius_ratio_min is not None else defaults[2]
     aicc_threshold = aicc_min if aicc_min is not None else defaults[3]
+    log_span_threshold = min_log_span if min_log_span is not None else defaults[4]
 
     if result.dimension is None or result.reason != Reason.ACCEPTED:
         return False, QualityGateReason.NOT_ACCEPTED, f"estimator refused: {result.reason.name}"
@@ -63,6 +69,15 @@ def sandbox_quality_gate(
             QualityGateReason.STDERR_TOO_HIGH,
             f"stderr={fit.slope_stderr:.4f} > {stderr_threshold}",
         )
+
+    # Log-span check: scaling window must cover enough decades
+    if result.window_log_span is not None:
+        if result.window_log_span < log_span_threshold:
+            return (
+                False,
+                QualityGateReason.LOG_SPAN_TOO_SMALL,
+                f"log_span={result.window_log_span:.4f} < {log_span_threshold:.4f}",
+            )
 
     # Radius ratio check: r_max / r_min of the scaling window
     if result.window_r_min is not None and result.window_r_max is not None:

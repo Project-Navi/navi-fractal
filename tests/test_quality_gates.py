@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+import math
+
 from navi_fractal import (
     LinFit,
     QualityGateReason,
@@ -21,6 +23,7 @@ def _make_accepted_result(
     window_r_min: int = 1,
     window_r_max: int = 10,
     delta_aicc: float = 10.0,
+    window_log_span: float = 2.3,
 ) -> SandboxResult:
     """Helper: build a synthetic accepted SandboxResult for gate testing."""
     fit = LinFit(
@@ -41,11 +44,13 @@ def _make_accepted_result(
         exponential_fit=None,
         window_r_min=window_r_min,
         window_r_max=window_r_max,
-        window_log_span=2.3,
+        window_log_span=window_log_span,
         window_delta_y=1.5,
         window_slope_range=None,
         window_aicc_quad_minus_lin=None,
         dimension_ci=None,
+        delta_aicc_ci=None,
+        bootstrap_valid_reps=0,
         radii_eval=(),
         mean_mass_eval=(),
         y_eval=(),
@@ -54,7 +59,7 @@ def _make_accepted_result(
         retained_fraction=1.0,
         n_centers=100,
         seed=42,
-        notes=None,
+        notes="",
     )
 
 
@@ -107,6 +112,29 @@ class TestParameterOverrides:
         assert not passed
         assert reason == QualityGateReason.AICC_MARGIN_TOO_SMALL
         assert detail is not None
+
+
+class TestLogSpanOverride:
+    def test_log_span_rejects_narrow(self) -> None:
+        """Window with log_span < log(3) should be rejected."""
+        result = _make_accepted_result(window_log_span=math.log(3.0 / 2.0))
+        passed, reason, _detail = sandbox_quality_gate(result, preset="inclusive")
+        assert not passed
+        assert reason == QualityGateReason.LOG_SPAN_TOO_SMALL
+
+    def test_log_span_passes_wide(self) -> None:
+        """Window with log_span > log(3) should pass."""
+        result = _make_accepted_result(window_log_span=math.log(5.0))
+        passed, _reason, _detail = sandbox_quality_gate(result, preset="inclusive")
+        assert passed
+
+    def test_log_span_override(self) -> None:
+        """Custom min_log_span should override preset."""
+        result = _make_accepted_result(window_log_span=math.log(2.0))
+        passed, _reason, _detail = sandbox_quality_gate(
+            result, preset="inclusive", min_log_span=math.log(1.5)
+        )
+        assert passed
 
 
 class TestDetailStrings:

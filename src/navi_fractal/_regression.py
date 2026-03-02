@@ -136,9 +136,10 @@ def wls(x: list[float], y: list[float], weights: list[float]) -> LinFit:
     )
 
 
-def aicc(sse: float, n: int, k: int) -> float:
-    """Corrected Akaike information criterion for small samples.
+def aicc_for_ols(sse: float, n: int, k: int) -> float:
+    """Corrected Akaike information criterion for small samples (OLS).
 
+    Uses n*log(sse/n) as the log-likelihood proxy — appropriate for OLS fits only.
     k = number of estimated parameters (2 for linear, 3 for quadratic).
     """
     if n <= k + 1:
@@ -148,6 +149,17 @@ def aicc(sse: float, n: int, k: int) -> float:
     aic = n * math.log(sse / n) + 2 * k
     correction = 2 * k * (k + 1) / (n - k - 1)
     return aic + correction
+
+
+# Backward-compatible alias
+aicc = aicc_for_ols
+
+
+def aicc_for_wls(chi2: float, n: int, k: int) -> float:
+    """Quasi-AICc for WLS using chi2 = sum(w_i * residual_i^2) as deviance proxy."""
+    if n <= k + 1:
+        return float("inf")
+    return float(chi2 + 2 * k + (2 * k * (k + 1)) / (n - k - 1))
 
 
 def quadratic_fit_residual(x: list[float], y: list[float]) -> float:
@@ -213,3 +225,122 @@ def quadratic_fit_residual(x: list[float], y: list[float]) -> float:
     a, b, c = coeffs
     sse = math.fsum((yi - (a * xi * xi + b * xi + c)) ** 2 for xi, yi in zip(x, y, strict=True))
     return sse
+
+
+def quadratic_fit_residual_wls(x: list[float], y: list[float], weights: list[float]) -> float:
+    """Fit y = a*x^2 + b*x + c via WLS and return WEIGHTED SSE.
+
+    Uses 3x3 Gaussian elimination on weighted normal equations.
+    Returns inf if n < 3 or system is singular.
+    """
+    n = len(x)
+    if n < 3:
+        return float("inf")
+    if n != len(y) or n != len(weights):
+        raise ValueError("x, y, and weights must have same length")
+
+    # Build weighted sums for normal equations
+    # S_k = sum(w_i * x_i^k), T_k = sum(w_i * x_i^k * y_i)
+    s0 = math.fsum(weights)
+    s1 = math.fsum(wi * xi for wi, xi in zip(weights, x, strict=True))
+    s2 = math.fsum(wi * xi * xi for wi, xi in zip(weights, x, strict=True))
+    s3 = math.fsum(wi * xi * xi * xi for wi, xi in zip(weights, x, strict=True))
+    s4 = math.fsum(wi * xi**4 for wi, xi in zip(weights, x, strict=True))
+    t0 = math.fsum(wi * yi for wi, yi in zip(weights, y, strict=True))
+    t1 = math.fsum(wi * xi * yi for wi, xi, yi in zip(weights, x, y, strict=True))
+    t2 = math.fsum(wi * xi * xi * yi for wi, xi, yi in zip(weights, x, y, strict=True))
+
+    # 3x3 augmented matrix: [[S0,S1,S2|T0],[S1,S2,S3|T1],[S2,S3,S4|T2]]
+    # Coefficients order: [c, b, a] (constant, linear, quadratic)
+    mat = [
+        [s0, s1, s2, t0],
+        [s1, s2, s3, t1],
+        [s2, s3, s4, t2],
+    ]
+
+    # Gaussian elimination with partial pivoting
+    for col in range(3):
+        max_row = col
+        max_val = abs(mat[col][col])
+        for row in range(col + 1, 3):
+            if abs(mat[row][col]) > max_val:
+                max_val = abs(mat[row][col])
+                max_row = row
+        if max_val < 1e-15:
+            return float("inf")
+        mat[col], mat[max_row] = mat[max_row], mat[col]
+
+        for row in range(col + 1, 3):
+            factor = mat[row][col] / mat[col][col]
+            for j in range(col, 4):
+                mat[row][j] -= factor * mat[col][j]
+
+    # Back substitution → [c, b, a]
+    coeffs = [0.0, 0.0, 0.0]
+    for i in range(2, -1, -1):
+        val = mat[i][3]
+        for j in range(i + 1, 3):
+            val -= mat[i][j] * coeffs[j]
+        if abs(mat[i][i]) < 1e-15:
+            return float("inf")
+        coeffs[i] = val / mat[i][i]
+
+    c, b, a = coeffs
+    wsse = math.fsum(
+        wi * (yi - (a * xi * xi + b * xi + c)) ** 2
+        for wi, xi, yi in zip(weights, x, y, strict=True)
+    )
+    return wsse
+
+
+def slope_range_over_subwindows(
+    x: list[float],
+    y: list[float],
+    *,
+    sub_len: int,
+    use_wls: bool,
+    w: list[float] | None = None,
+) -> float:
+    """Range of slopes across contiguous sub-windows of length *sub_len*.
+
+    Returns max(slope) - min(slope) over all contiguous sub-windows.
+    """
+    if use_wls:
+        if w is None:
+            raise ValueError("w must be provided when use_wls=True")
+        return _slope_range_wls(x, y, w, sub_len)
+    return _slope_range_ols(x, y, sub_len)
+
+
+def _slope_range_ols(x: list[float], y: list[float], sub_len: int) -> float:
+    n = len(x)
+    if n < sub_len or sub_len < 2:
+        return 0.0
+
+    slopes: list[float] = []
+    for start in range(n - sub_len + 1):
+        fit = ols(x[start : start + sub_len], y[start : start + sub_len])
+        slopes.append(fit.slope)
+
+    if len(slopes) < 2:
+        return 0.0
+    return max(slopes) - min(slopes)
+
+
+def _slope_range_wls(x: list[float], y: list[float], w: list[float], sub_len: int) -> float:
+    n = len(x)
+    if n < sub_len or sub_len < 2:
+        return 0.0
+
+    slopes: list[float] = []
+    for start in range(n - sub_len + 1):
+        fit = wls(
+            x[start : start + sub_len],
+            y[start : start + sub_len],
+            w[start : start + sub_len],
+        )
+        slopes.append(fit.slope)
+
+    if len(slopes) < 2:
+        return 0.0
+    return max(slopes) - min(slopes)

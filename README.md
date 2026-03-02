@@ -5,8 +5,14 @@ Most fractal dimension tools will always give you a number. This one won't.
 ```python
 from navi_fractal import Graph, estimate_sandbox_dimension
 
+# Load your network — edge list, adjacency matrix, whatever you have
 G = Graph()
-# ... build your network ...
+with open("edges.csv") as f:
+    for line in f:
+        u, v = line.strip().split(",")
+        G.add_node(u)
+        G.add_node(v)
+        G.add_edge(u, v)
 
 result = estimate_sandbox_dimension(G, seed=42)
 

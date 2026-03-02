@@ -14,11 +14,14 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import json
 import math
+import platform
 import random as _random
 import sys
 import time
 from dataclasses import dataclass
+from datetime import UTC, datetime
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
@@ -472,6 +475,272 @@ def compare(spec: GraphSpec) -> Comparison:
 
 
 # ---------------------------------------------------------------------------
+# Table renderers (stdout)
+# ---------------------------------------------------------------------------
+
+
+def _fmt_dim(d: float | None) -> str:
+    """Format dimension value or REFUSED."""
+    return f"{d:.4f}" if d is not None else "REFUSED"
+
+
+def _fmt_gap_pct(measured: float | None, analytical: float | None) -> str:
+    """Format gap as percentage of analytical value, or '---'."""
+    if measured is None or analytical is None or analytical == 0.0:
+        return "---"
+    gap_pct = 100.0 * (measured - analytical) / analytical
+    return f"{gap_pct:+.2f}%"
+
+
+def _fmt_delta(d: float | None) -> str:
+    """Format a delta value with sign, or '---'."""
+    return f"{d:+.4f}" if d is not None else "---"
+
+
+def _fmt_time(s: float) -> str:
+    """Format elapsed seconds."""
+    return f"{s:.2f}s"
+
+
+def print_dimension_table(comparisons: list[Comparison]) -> None:
+    """Print Table 1: dimension estimates for all emit-expected cases."""
+    emit_cases = [c for c in comparisons if c.spec.expect == "emit"]
+    if not emit_cases:
+        return
+
+    print("=" * 100)
+    print("TABLE 1: Dimension Estimates (emit cases)")
+    print("=" * 100)
+
+    header = (
+        f"{'Graph':<22} {'Nodes':>7} {'Analyt':>8} "
+        f"{'v4 D':>8} {'v4 gap%':>8} "
+        f"{'nf D':>8} {'nf gap%':>8} "
+        f"{'v4-nf':>8} {'Time':>8}"
+    )
+    print(header)
+    print("-" * 100)
+
+    for c in emit_cases:
+        v4_gap = _fmt_gap_pct(c.v4.dimension, c.spec.analytical_d)
+        nf_gap = _fmt_gap_pct(c.nf.dimension, c.spec.analytical_d)
+        delta = _fmt_delta(c.dimension_delta)
+        total_time = _fmt_time(c.v4.elapsed_s + c.nf.elapsed_s)
+        analytical = f"{c.spec.analytical_d:.4f}" if c.spec.analytical_d is not None else "---"
+
+        row = (
+            f"{c.spec.label:<22} {c.v4.n_nodes:>7} {analytical:>8} "
+            f"{_fmt_dim(c.v4.dimension):>8} {v4_gap:>8} "
+            f"{_fmt_dim(c.nf.dimension):>8} {nf_gap:>8} "
+            f"{delta:>8} {total_time:>8}"
+        )
+        print(row)
+
+    print()
+
+
+def print_convergence_tables(comparisons: list[Comparison]) -> None:
+    """Print Table 2: convergence series grouped by flower family."""
+    # Collect groups
+    groups: dict[str, list[Comparison]] = {}
+    for c in comparisons:
+        if c.spec.group is not None:
+            groups.setdefault(c.spec.group, []).append(c)
+
+    if not groups:
+        return
+
+    print("=" * 100)
+    print("TABLE 2: Convergence Series")
+    print("=" * 100)
+
+    for group_key, members in groups.items():
+        # All members share the same analytical_d
+        analytical = members[0].spec.analytical_d
+        analytical_str = f"{analytical:.4f}" if analytical is not None else "---"
+        print(f"\n  {group_key}  (analytical d_B = {analytical_str})")
+
+        header = (
+            f"  {'Graph':<22} {'Nodes':>7} "
+            f"{'v4 D':>8} {'v4 gap%':>8} "
+            f"{'nf D':>8} {'nf gap%':>8}"
+        )
+        print(header)
+        print("  " + "-" * 73)
+
+        for c in members:
+            v4_gap = _fmt_gap_pct(c.v4.dimension, c.spec.analytical_d)
+            nf_gap = _fmt_gap_pct(c.nf.dimension, c.spec.analytical_d)
+            row = (
+                f"  {c.spec.label:<22} {c.v4.n_nodes:>7} "
+                f"{_fmt_dim(c.v4.dimension):>8} {v4_gap:>8} "
+                f"{_fmt_dim(c.nf.dimension):>8} {nf_gap:>8}"
+            )
+            print(row)
+
+    print()
+
+
+def print_refusal_table(comparisons: list[Comparison]) -> None:
+    """Print Table 3: refusal cases with verdict comparison."""
+    refuse_cases = [c for c in comparisons if c.spec.expect == "refuse"]
+    if not refuse_cases:
+        return
+
+    print("=" * 100)
+    print("TABLE 3: Refusal Cases")
+    print("=" * 100)
+
+    header = (
+        f"{'Graph':<22} {'Nodes':>7} "
+        f"{'v4 verdict':>12} {'nf verdict':>12} {'Match':>7}"
+    )
+    print(header)
+    print("-" * 100)
+
+    for c in refuse_cases:
+        v4_verdict = "REFUSED" if c.v4.dimension is None else f"D={c.v4.dimension:.4f}"
+        nf_verdict = "REFUSED" if c.nf.dimension is None else f"D={c.nf.dimension:.4f}"
+        v4_refused = c.v4.dimension is None
+        nf_refused = c.nf.dimension is None
+        match = "yes" if v4_refused == nf_refused else "NO"
+        row = (
+            f"{c.spec.label:<22} {c.v4.n_nodes:>7} "
+            f"{v4_verdict:>12} {nf_verdict:>12} {match:>7}"
+        )
+        print(row)
+
+    print()
+
+
+# ---------------------------------------------------------------------------
+# JSON report writer
+# ---------------------------------------------------------------------------
+
+
+def _round_or_none(val: float | None, digits: int) -> float | None:
+    """Round a float to the given number of digits, or return None."""
+    return round(val, digits) if val is not None else None
+
+
+def _gap_pct(measured: float | None, analytical: float | None) -> float | None:
+    """Compute gap as percentage of analytical value, or None."""
+    if measured is None or analytical is None or analytical == 0.0:
+        return None
+    return round(100.0 * (measured - analytical) / analytical, 4)
+
+
+def _run_result_to_dict(r: RunResult) -> dict:
+    """Serialize a RunResult to a JSON-safe dict."""
+    return {
+        "backend": r.backend,
+        "dimension": _round_or_none(r.dimension, 6),
+        "reason": r.reason,
+        "r2": _round_or_none(r.r2, 6),
+        "slope": _round_or_none(r.slope, 6),
+        "slope_stderr": _round_or_none(r.slope_stderr, 6),
+        "window_r_min": r.window_r_min,
+        "window_r_max": r.window_r_max,
+        "window_log_span": _round_or_none(r.window_log_span, 6),
+        "window_delta_y": _round_or_none(r.window_delta_y, 6),
+        "delta_aicc": _round_or_none(r.delta_aicc, 4),
+        "elapsed_s": round(r.elapsed_s, 4),
+        "n_nodes": r.n_nodes,
+    }
+
+
+def _flower_formula(u: int, v: int) -> str:
+    """Build the analytical formula string for (u,v)-flower d_B."""
+    return f"ln({u + v})/ln({u})"
+
+
+def write_json_report(comparisons: list[Comparison], total_elapsed: float) -> str:
+    """Write structured JSON report and return the output path."""
+    report_path = Path(__file__).resolve().parent / "calibration-report.json"
+
+    # --- metadata ---
+    metadata = {
+        "timestamp": datetime.now(UTC).isoformat(),
+        "python_version": platform.python_version(),
+        "seed": SEED,
+        "total_elapsed_s": round(total_elapsed, 2),
+        "corpus_size": len(comparisons),
+        "sign_conventions": {
+            "analytical_gap": "measured - analytical (positive = overestimate)",
+            "gap_pct": "100 * (measured - analytical) / analytical",
+            "dimension_delta": "nf - v4 (positive = nf higher)",
+        },
+    }
+
+    # --- per-graph comparisons ---
+    comp_list = []
+    for c in comparisons:
+        entry = {
+            "label": c.spec.label,
+            "family": c.spec.family,
+            "group": c.spec.group,
+            "expect": c.spec.expect,
+            "analytical_d": _round_or_none(c.spec.analytical_d, 6),
+            "v4": _run_result_to_dict(c.v4),
+            "nf": _run_result_to_dict(c.nf),
+            "deltas": {
+                "dimension_delta": _round_or_none(c.dimension_delta, 6),
+                "r2_delta": _round_or_none(c.r2_delta, 6),
+                "analytical_gap_v4": _round_or_none(c.analytical_gap_v4, 6),
+                "analytical_gap_nf": _round_or_none(c.analytical_gap_nf, 6),
+                "gap_pct_v4": _gap_pct(c.v4.dimension, c.spec.analytical_d),
+                "gap_pct_nf": _gap_pct(c.nf.dimension, c.spec.analytical_d),
+            },
+        }
+        comp_list.append(entry)
+
+    # --- convergence groups ---
+    groups: dict[str, list[Comparison]] = {}
+    for c in comparisons:
+        if c.spec.group is not None:
+            groups.setdefault(c.spec.group, []).append(c)
+
+    convergence: dict[str, dict] = {}
+    for group_key, members in groups.items():
+        analytical = members[0].spec.analytical_d
+        # Build formula string for flowers
+        params = members[0].spec.params
+        if "u" in params and "v" in params:
+            u_val, v_val = params["u"], params["v"]
+            formula = f"ln({u_val + v_val})/ln({u_val}) = {_flower_formula(u_val, v_val)}"
+        else:
+            formula = None
+
+        generations = []
+        for c in members:
+            generations.append(
+                {
+                    "label": c.spec.label,
+                    "n_nodes": c.v4.n_nodes,
+                    "v4_dimension": _round_or_none(c.v4.dimension, 6),
+                    "nf_dimension": _round_or_none(c.nf.dimension, 6),
+                    "gap_pct_v4": _gap_pct(c.v4.dimension, analytical),
+                    "gap_pct_nf": _gap_pct(c.nf.dimension, analytical),
+                }
+            )
+
+        convergence[group_key] = {
+            "analytical_d": _round_or_none(analytical, 6),
+            "formula": formula,
+            "generations": generations,
+        }
+
+    report = {
+        "metadata": metadata,
+        "comparisons": comp_list,
+        "convergence": convergence,
+    }
+
+    report_path.write_text(json.dumps(report, indent=2) + "\n")
+    return str(report_path)
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
@@ -493,13 +762,23 @@ def main() -> None:
     print(f"Corpus: {len(registry)} graph instances, seed={SEED}, mode={mode}")
     print()
 
-    # Smoke-test: run one small graph
-    test_spec = next(s for s in registry if s.label == "flower_22_gen4")
-    c = compare(test_spec)
-    print(
-        f"Smoke test: {c.spec.label}:"
-        f" v4={c.v4.dimension}, nf={c.nf.dimension}, delta={c.dimension_delta}"
-    )
+    t_total = time.perf_counter()
+    comparisons: list[Comparison] = []
+    for i, spec in enumerate(registry, 1):
+        print(f"  [{i}/{len(registry)}] {spec.label}...", end="", flush=True)
+        c = compare(spec)
+        comparisons.append(c)
+        d_str = f"v4={_fmt_dim(c.v4.dimension)} nf={_fmt_dim(c.nf.dimension)}"
+        print(f" {d_str} ({c.v4.elapsed_s + c.nf.elapsed_s:.1f}s)")
+    total = time.perf_counter() - t_total
+    print(f"\nTotal: {total:.1f}s\n")
+
+    print_dimension_table(comparisons)
+    print_convergence_tables(comparisons)
+    print_refusal_table(comparisons)
+
+    json_path = write_json_report(comparisons, total)
+    print(f"JSON report written to: {json_path}")
 
 
 if __name__ == "__main__":

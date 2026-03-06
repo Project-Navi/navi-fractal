@@ -13,3 +13,4 @@ build/
 .serena/
 
 .benchmarks/
+docs/internal/

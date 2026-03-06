@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Copyright 2024-2026 Nelson Spence
 # SPDX-License-Identifier: Apache-2.0
 """Calibration instrument: v4 vs navi-fractal side-by-side comparison.
 

@@ -1,3 +1,4 @@
+# Copyright 2024-2026 Nelson Spence
 # SPDX-License-Identifier: Apache-2.0
 """Layer 2 flower integration smoke tests — validate v4 sandbox dimension
 estimation on (u,v)-flower recursive scale-free networks.

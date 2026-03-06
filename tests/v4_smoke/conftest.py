@@ -1,3 +1,4 @@
+# Copyright 2024-2026 Nelson Spence
 # SPDX-License-Identifier: Apache-2.0
 """Shared fixtures and graph constructors for v4 smoke tests.
 

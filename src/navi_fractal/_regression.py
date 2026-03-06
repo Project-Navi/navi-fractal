@@ -1,3 +1,4 @@
+# Copyright 2024-2026 Nelson Spence
 # SPDX-License-Identifier: Apache-2.0
 """Regression utilities: OLS, WLS, AICc, quadratic fit.
 

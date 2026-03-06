@@ -1,3 +1,4 @@
+# Copyright 2024-2026 Nelson Spence
 # SPDX-License-Identifier: Apache-2.0
 """Layer 3 cross-algorithm plausibility smoke tests — validate v4 sandbox
 dimension estimation on grids, paths, and non-fractal networks.

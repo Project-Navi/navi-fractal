@@ -1,3 +1,4 @@
+# Copyright 2024-2026 Nelson Spence
 # SPDX-License-Identifier: Apache-2.0
 """Layer 1 math primitive smoke tests — validate v4 regression, AICc,
 percentile, quadratic fit, moment aggregation, and slope stability functions.

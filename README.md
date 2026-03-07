@@ -1,29 +1,34 @@
-# navi-fractal
+<p align="center">
+  <img src="docs/assets/logo.png" alt="navi-fractal" width="120">
+</p>
 
-Most fractal dimension tools will always give you a number. This one won't.
+<h1 align="center">navi-fractal</h1>
+
+<p align="center">
+  <strong>Audit-grade fractal dimension estimation for graphs.</strong><br>
+  Refuses to emit a dimension without positive evidence of power-law scaling.
+</p>
+
+<p align="center">
+  <a href="https://github.com/Project-Navi/navi-fractal/actions"><img src="https://github.com/Project-Navi/navi-fractal/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://pypi.org/project/navi-fractal/"><img src="https://img.shields.io/pypi/v/navi-fractal" alt="PyPI"></a>
+  <img src="https://img.shields.io/pypi/pyversions/navi-fractal" alt="Python 3.12+">
+  <img src="https://img.shields.io/badge/dependencies-0-brightgreen" alt="Zero deps">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache_2.0-orange" alt="License"></a>
+  <a href="https://project-navi.github.io/navi-fractal"><img src="https://img.shields.io/badge/docs-mkdocs-7eb8a8" alt="Docs"></a>
+</p>
+
+---
 
 ```python
-from navi_fractal import Graph, estimate_sandbox_dimension
+from navi_fractal import make_grid_graph, estimate_sandbox_dimension
 
-# Load your network — edge list, adjacency matrix, whatever you have
-G = Graph()
-with open("edges.csv") as f:
-    for line in f:
-        u, v = line.strip().split(",")
-        G.add_node(u)
-        G.add_node(v)
-        G.add_edge(u, v)
-
-result = estimate_sandbox_dimension(G, seed=42)
-
-if result.dimension is not None:
-    print(f"D = {result.dimension:.3f}, R² = {result.powerlaw_fit.r2:.4f}")
-else:
-    print(f"Refused: {result.reason.value}")
-    # "no_window_passes_r2", "aicc_prefers_exponential", ...
+grid = make_grid_graph(30, 30)
+result = estimate_sandbox_dimension(grid, seed=42)
+print(f"D = {result.dimension:.3f}")  # D = 1.620
 ```
 
-If your network has fractal structure, navi-fractal finds it and shows you the evidence — dimension estimate, R², model selection, confidence intervals, the full audit trail. If it doesn't, you get a refusal with the exact reason why. Not a meaningless number. Not a warning you can ignore. A refusal.
+If your network has fractal structure, navi-fractal finds it and shows you the evidence. If it doesn't, you get a refusal with the exact reason why.
 
 ```
 Complete graph K50    → Refused: trivial_graph
@@ -34,7 +39,7 @@ Erdos-Renyi random    → Refused: no_window_passes_r2
 (2,2)-flower gen 8    → D = 1.812, R² = 0.9994
 ```
 
-The refusal is the feature.
+**The refusal is the feature.**
 
 ## Install
 
@@ -43,19 +48,6 @@ pip install navi-fractal
 ```
 
 Python 3.12+. Zero runtime dependencies.
-
-## Why This Exists
-
-Every fractal dimension tool we could find will happily estimate D on a random graph, a complete graph, or pure noise. You get a number, maybe an R², and no indication that the result is meaningless. If you're a researcher relying on that number, you're building on sand.
-
-navi-fractal applies a chain of quality gates before emitting a dimension. A result is only produced when **all** of these pass:
-
-- **R² threshold** — the power-law fit must actually fit (default 0.85)
-- **AICc model selection** — power-law must beat exponential by a margin, not just edge it out
-- **Curvature guard** — reject windows where a quadratic fits significantly better in log-log
-- **Slope stability** — reject windows with high local slope dispersion
-
-If any gate fails, you get `dimension=None` and a machine-readable reason. Every result — accepted or refused — is a frozen dataclass with the full intermediate data: radii, masses, fits, window bounds, AICc scores. You can inspect exactly what happened and why.
 
 ## How It Works
 
@@ -73,13 +65,13 @@ The sandbox (mass-radius) method: pick random center nodes, run BFS to measure b
 | Bootstrap | Resample centers for confidence intervals |
 | Result | Full diagnostic dataclass or refusal with reason |
 
-Deterministic given the same seed and Python version. Seeded RNG, compiled graph with sorted adjacency, reproducible results.
+Deterministic given the same seed and Python version.
 
-## Measurement Characteristics
+**[Full documentation →](https://project-navi.github.io/navi-fractal)**
 
-Sandbox dimension measures mass-radius scaling, not box-counting dimension. On finite networks these converge in the infinite-size limit, but the sandbox algorithm systematically underestimates on finite graphs due to boundary and saturation effects. We calibrate against networks with exact analytical dimensions rather than hiding the gap.
+## Calibration
 
-**Finite-size convergence** on (u,v)-flower networks (Rozenfeld et al. 2007, NJP 9:175), where d_B = ln(u+v)/ln(u) is known exactly:
+Sandbox dimension is validated against (u,v)-flower networks with exact analytical dimensions from [fd-formalization](https://github.com/Project-Navi/fd-formalization) (Lean 4, zero sorry, zero custom axioms).
 
 | Family | Gen | Nodes | Analytical d_B | Sandbox D | Gap |
 |--------|-----|-------|----------------|-----------|-----|
@@ -97,19 +89,22 @@ Sandbox dimension measures mass-radius scaling, not box-counting dimension. On f
 | (2,3)-flower | 5 | 2,345 | 2.322 | 1.882 | -19.0% |
 | (2,3)-flower | 6 | 11,720 | 2.322 | 1.991 | -14.2% |
 
-The gap generally shrinks with network size. The (2,2)-flower gen 7→8 reversal (-6.0% → -9.4%) is not a bug — the window search selects different optimal windows at different scales, and this objective can diverge from convergence toward the analytical dimension when hub structure and saturation effects scale at different rates. We document this as a measurement characteristic rather than explaining it away.
+The gap generally shrinks with network size. See [calibration regime](https://project-navi.github.io/navi-fractal/explanation/calibration-regime/) for convergence analysis and the gen 7→8 reversal.
 
-Non-fractal networks (Barabasi-Albert, Erdos-Renyi, complete graphs) are correctly refused. The (1,2)-flower — a transfractal network with infinite analytical d_B — is also rejected.
+## Design Philosophy
 
-See `scripts/calibrate.py` for the full calibration instrument and `scripts/calibration-report.json` for the structured baseline.
+navi-fractal applies a chain of quality gates before emitting a dimension. A result is only produced when **all** of these pass:
 
-## License
+- **R² threshold** — the power-law fit must actually fit
+- **AICc model selection** — power-law must beat exponential decisively
+- **Curvature guard** — reject windows where quadratic fits better in log-log
+- **Slope stability** — reject windows with high local slope dispersion
 
-Apache 2.0 — see [LICENSE](LICENSE).
+If any gate fails, you get `dimension=None` and a machine-readable reason. Every result — accepted or refused — is a frozen dataclass with the full intermediate data. You can inspect exactly what happened and why.
+
+We calibrate against networks with exact analytical dimensions rather than hiding the gap. Sandbox dimension measures mass-radius scaling, not box-counting dimension. On finite networks these converge in the infinite-size limit, but the sandbox algorithm systematically underestimates due to boundary and saturation effects. We document this rather than explaining it away.
 
 ## Citation
-
-If you use this software in research, please cite:
 
 ```bibtex
 @software{spence2026navifractal,
@@ -119,3 +114,7 @@ If you use this software in research, please cite:
   url = {https://github.com/Project-Navi/navi-fractal}
 }
 ```
+
+## License
+
+Apache 2.0 — see [LICENSE](LICENSE).

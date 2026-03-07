@@ -45,8 +45,7 @@ dev = [
     "bandit>=1.8.0",
 ]
 docs = [
-    "mkdocs-material>=9.6",
-    "mkdocstrings[python]>=0.28",
+    "zensical>=0.0.24",
 ]
 
 [tool.ruff]

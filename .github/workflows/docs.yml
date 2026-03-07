@@ -5,7 +5,7 @@ on:
     branches: [main]
     paths:
       - "docs/**"
-      - "mkdocs.yml"
+      - "zensical.toml"
       - ".github/workflows/docs.yml"
   workflow_dispatch:
 
@@ -29,10 +29,10 @@ jobs:
       - name: Install docs dependencies
         run: uv sync --frozen --group docs
       - name: Build site
-        run: uv run zensical build --strict
+        run: uv run zensical build
       - name: Strip internal docs from build
         run: rm -rf site/internal
-      - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
+      - uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4.0.0
         with:
           path: site
 

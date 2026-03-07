@@ -13,7 +13,7 @@ grid = make_grid_graph(30, 30)
 result = estimate_sandbox_dimension(grid, seed=42)
 
 print(f"Dimension: {result.dimension:.3f}")       # 1.620
-print(f"R²:        {result.powerlaw_fit.r2:.4f}")  # 0.9991
+print(f"R²:        {result.powerlaw_fit.r2:.4f}")  # 0.9999
 print(f"Window:    r=[{result.window_r_min}, {result.window_r_max}]")
 print(f"Reason:    {result.reason.value}")          # accepted
 ```

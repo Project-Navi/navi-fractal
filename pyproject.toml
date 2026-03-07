@@ -29,8 +29,10 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Information Analysis",
     "Typing :: Typed",
 ]
+keywords = ["fractal", "dimension", "graph", "network", "box-counting", "sandbox"]
 
 [project.urls]
+Documentation = "https://project-navi.github.io/navi-fractal"
 Repository = "https://github.com/Project-Navi/navi-fractal"
 Issues = "https://github.com/Project-Navi/navi-fractal/issues"
 
@@ -41,6 +43,10 @@ dev = [
     "ruff>=0.9.0",
     "mypy>=1.8.0",
     "bandit>=1.8.0",
+]
+docs = [
+    "mkdocs-material>=9.6",
+    "mkdocstrings[python]>=0.28",
 ]
 
 [tool.ruff]

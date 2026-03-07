@@ -330,3 +330,27 @@ class TestBootstrapImprovements:
             bootstrap_seed=100,
         )
         assert r1.dimension_ci == r2.dimension_ci
+
+
+class TestRadiusOneAnchor:
+    def test_radius_one_survives_saturation_filter(self) -> None:
+        """r=1 must survive the saturation filter for connected graphs.
+
+        Pass explicit radii and low min_points to force the code through the
+        saturation filter loop (lines 344-358 of _sandbox.py) rather than
+        hitting the early min_points guard on radii_list.
+        """
+        # 30x30 grid: diameter ~58, r=1 ball has mass ~5 (center + neighbors).
+        # With explicit radii and min_points=2 we guarantee the saturation
+        # filter runs and r=1 must survive.
+        grid = make_grid_graph(30, 30)
+        result = estimate_sandbox_dimension(
+            grid,
+            seed=42,
+            radii=[1, 2, 3, 4, 5, 6, 8, 10, 12],
+            min_points=2,
+        )
+        assert len(result.radii_eval) > 0, "radii_eval is empty"
+        assert result.radii_eval[0] == 1, (
+            f"r=1 was filtered out; radii_eval starts at {result.radii_eval[0]}"
+        )

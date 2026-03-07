@@ -26,7 +26,7 @@ result = estimate_sandbox_dimension(g)
 `add_edge` automatically creates nodes that do not already exist, so you do not
 need a separate node-loading step. Self-loops are silently ignored.
 
-### Adjacency matrix (numpy)
+### Adjacency matrix (NumPy)
 
 Iterate the upper triangle of a symmetric adjacency matrix:
 
@@ -46,7 +46,7 @@ for i in range(n):
 result = estimate_sandbox_dimension(g)
 ```
 
-### From networkx
+### From NetworkX
 
 If you already have a `networkx.Graph`, iterate its edge view:
 
@@ -81,7 +81,7 @@ g = Graph()
 
 cg = compile_to_undirected_metric_graph(g)
 
-# Run with different parameters — no re-compilation cost
+# Run with different parameters -- no re-compilation cost
 result_default = estimate_sandbox_dimension(cg)
 result_relaxed = estimate_sandbox_dimension(cg, r2_min=0.7)
 result_tight = estimate_sandbox_dimension(cg, r2_min=0.95)

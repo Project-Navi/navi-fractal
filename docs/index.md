@@ -31,15 +31,15 @@ print(f"D = {result.dimension:.3f}")  # D = 1.620
 
 ## The refusal is the feature
 
-If your network doesn't have fractal structure, you don't get a number — you get a machine-readable refusal with the exact reason why.
+If your network doesn't have fractal structure, you don't get a number -- you get a machine-readable refusal with the exact reason why.
 
 ```
 Complete graph K50    → Refused: trivial_graph
-Barabasi-Albert       → Refused: no_window_passes_r2
-Erdos-Renyi random    → Refused: no_window_passes_r2
-(1,2)-flower          → Refused: aicc_prefers_exponential
-30×30 grid            → D = 1.620, R² = 0.9991
-(2,2)-flower gen 8    → D = 1.812, R² = 0.9994
+Barabási-Albert       → Refused: no_valid_radii
+Erdős-Rényi random    → Refused: no_valid_radii
+(1,2)-flower          → Refused: no_valid_radii
+30×30 grid            → D = 1.620, R² = 0.9999
+(2,2)-flower gen 8    → D = 1.810, R² = 0.9994
 ```
 
 ## Quality gates, not warnings
@@ -53,7 +53,7 @@ Every result passes through a chain of statistical gates before emission:
 | **Curvature guard** | Reject windows where quadratic fits better |
 | **Slope stability** | Reject windows with high local slope dispersion |
 
-If any gate fails: `dimension=None`, `reason=<why>`. Every result — accepted or refused — is a frozen dataclass with the full audit trail.
+If any gate fails: `dimension=None`, `reason=<why>`. Every result -- accepted or refused -- is a frozen dataclass with the full audit trail.
 
 ## Calibrated against ground truth
 

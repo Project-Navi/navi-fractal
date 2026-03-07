@@ -29,21 +29,21 @@ this formula has been formally proved in Lean 4 (see
 
 | Family | Gen | Nodes | Analytical d_B | Sandbox D | Gap |
 |--------|-----|-------|----------------|-----------|-----|
-| (2,2)-flower | 4 | 172 | 2.000 | 1.379 | -31.1% |
-| (2,2)-flower | 5 | 684 | 2.000 | 1.633 | -18.4% |
-| (2,2)-flower | 6 | 2,732 | 2.000 | 1.686 | -15.7% |
-| (2,2)-flower | 7 | 10,924 | 2.000 | 1.881 | -6.0% |
-| (2,2)-flower | 8 | 43,692 | 2.000 | 1.812 | -9.4% |
-| (3,3)-flower | 3 | 174 | 1.631 | 1.314 | -19.5% |
+| (2,2)-flower | 4 | 172 | 2.000 | 1.380 | -31.0% |
+| (2,2)-flower | 5 | 684 | 2.000 | 1.635 | -18.2% |
+| (2,2)-flower | 6 | 2,732 | 2.000 | 1.690 | -15.5% |
+| (2,2)-flower | 7 | 10,924 | 2.000 | 1.880 | -6.0% |
+| (2,2)-flower | 8 | 43,692 | 2.000 | 1.810 | -9.5% |
+| (3,3)-flower | 3 | 174 | 1.631 | 1.313 | -19.5% |
 | (3,3)-flower | 4 | 1,038 | 1.631 | 1.418 | -13.1% |
 | (3,3)-flower | 5 | 6,222 | 1.631 | 1.495 | -8.3% |
-| (4,4)-flower | 3 | 440 | 1.500 | 1.295 | -13.7% |
+| (4,4)-flower | 3 | 440 | 1.500 | 1.294 | -13.7% |
 | (4,4)-flower | 4 | 3,512 | 1.500 | 1.398 | -6.8% |
-| (2,3)-flower | 4 | 470 | 2.322 | 1.669 | -28.1% |
-| (2,3)-flower | 5 | 2,345 | 2.322 | 1.882 | -19.0% |
-| (2,3)-flower | 6 | 11,720 | 2.322 | 1.991 | -14.2% |
+| (2,3)-flower | 4 | 470 | 2.322 | 1.670 | -28.1% |
+| (2,3)-flower | 5 | 2,345 | 2.322 | 1.881 | -19.0% |
+| (2,3)-flower | 6 | 11,720 | 2.322 | 1.992 | -14.2% |
 
-All measurements use default parameters: seed=0, 256 centers, geometric mean,
+All measurements use default parameters: seed=42, 256 centers, geometric mean,
 WLS, curvature guard on, slope stability guard off.
 
 ## Convergence behavior
@@ -71,7 +71,7 @@ from local measurements than from global counts.
 ## The gen 7 to 8 reversal
 
 The (2,2)-flower calibration shows a gap that goes from -6.0% at gen 7 to
--9.4% at gen 8. This non-monotonic behavior deserves explanation because it
+-9.5% at gen 8. This non-monotonic behavior deserves explanation because it
 looks like the measurement is getting worse even as the graph gets bigger.
 
 This is a legitimate measurement characteristic, not a bug. Here is what
@@ -128,17 +128,18 @@ counts and local ball masses.
 The calibration regime also validates the refusal behavior. Networks that
 should not have a finite fractal dimension are correctly refused:
 
-- **Barabasi-Albert** (preferential attachment): refused with
-  `no_window_passes_r2`. Ball-mass growth is too fast and too irregular for
-  any window to show clean power-law scaling.
-- **Erdos-Renyi** (random graphs): refused with `no_window_passes_r2`.
-  The small-world property means ball mass saturates within a few hops.
+- **Barabási-Albert** (preferential attachment): refused with
+  `no_valid_radii`. Ball-mass growth saturates so quickly that too few
+  non-degenerate radii survive filtering.
+- **Erdős-Rényi** (random graphs): refused with `no_valid_radii`.
+  The small-world property means ball mass saturates within a few hops,
+  leaving insufficient radii for window construction.
 - **Complete graphs**: refused with `trivial_graph`. Diameter is 1.
-- **(1,2)-flower** (transfractal, u=1): refused with
-  `aicc_prefers_exponential`. With u=1, the hub distance is L_g = 1 for all
-  generations -- the network grows but doesn't stretch. Ball-mass growth is
-  exponential in radius, and the AICc gate catches this correctly.
+- **(1,2)-flower** (transfractal, u=1): refused with `no_valid_radii`.
+  With u=1, the hub distance is L_g = 1 for all generations -- the network
+  grows but doesn't stretch. Ball-mass growth saturates too rapidly for any
+  meaningful radius sequence.
 
 These refusals are as important as the acceptances. A fractal dimension tool
-that reports D=2.3 for a Barabasi-Albert network is worse than useless -- it
+that reports D=2.3 for a Barabási-Albert network is worse than useless -- it
 gives false confidence. The refusal is the feature.

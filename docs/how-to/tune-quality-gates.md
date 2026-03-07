@@ -109,7 +109,7 @@ passed, reason, detail = sandbox_quality_gate(result, preset="inclusive")
 if passed:
     print(f"Dimension: {result.dimension:.4f}")
 else:
-    print(f"Rejected: {reason.name} — {detail}")
+    print(f"Rejected: {reason.value} -- {detail}")
 ```
 
 ### Using the strict preset

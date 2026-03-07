@@ -1,7 +1,7 @@
 # Theory Bridge: fd-formalization
 
 navi-fractal measures fractal dimension empirically. A companion project,
-[fd-formalization](https://github.com/ndspence/fd-formalization), proves the
+[fd-formalization](https://github.com/Project-Navi/fd-formalization), proves the
 analytical dimension formula in Lean 4. This page explains what each project
 does, how they relate, and where they differ.
 

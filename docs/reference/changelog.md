@@ -20,5 +20,5 @@ Initial release.
 - Helper constructors: `make_grid_graph`, `make_path_graph`
 - Degree-preserving rewiring null model
 - Calibration against (u,v)-flower networks with exact analytical dimensions
-- Full audit trail in `SandboxResult` frozen dataclass (24 fields)
+- Full audit trail in `SandboxResult` frozen dataclass (25 fields)
 - Zero runtime dependencies, Python 3.12+

@@ -39,7 +39,7 @@ The calibration corpus includes several flower families:
 
 The corpus also includes standard geometries (30x30 grid with d_B = 2.0, path
 graph with d_B = 1.0) and non-fractal controls that should be *refused*
-(Barabasi-Albert, Erdos-Renyi, complete graph, (1,2)-flower which is
+(Barabási-Albert, Erdős-Rényi, complete graph, (1,2)-flower which is
 transfractal).
 
 ## Running the calibration script

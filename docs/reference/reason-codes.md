@@ -14,7 +14,7 @@ Every `SandboxResult` includes a `reason` field from the `Reason` enum explainin
 |------|-------|---------|
 | `EMPTY_GRAPH` | `"empty_graph"` | Input graph has no nodes. |
 | `TRIVIAL_GRAPH` | `"trivial_graph"` | Graph has diameter ≤ 1 (complete graph, single edge, etc.). |
-| `GIANT_COMPONENT_TOO_SMALL` | `"giant_component_too_small"` | Largest connected component is too small relative to total nodes. Check `reason_detail` for `giant=N, total=M`. |
+| `GIANT_COMPONENT_TOO_SMALL` | `"giant_component_too_small"` | Giant component is trivially small (0 or 1 nodes after extraction). Check `reason_detail` for `giant=N, total=M`. |
 | `NO_VALID_RADII` | `"no_valid_radii"` | Too few distinct radii with non-trivial mass growth. |
 | `NO_WINDOW_PASSES_R2` | `"no_window_passes_r2"` | No contiguous radius window achieves the minimum R² threshold. The graph likely has no power-law scaling regime. |
 | `AICC_PREFERS_EXPONENTIAL` | `"aicc_prefers_exponential"` | Best window's AICc prefers exponential over power-law by the required margin. Suggests small-world rather than fractal structure. |

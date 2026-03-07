@@ -69,8 +69,8 @@ Estimate the sandbox (mass-radius) fractal dimension of a graph.
 | `n_centers` | `256` | Number of random BFS centers |
 | `radii` | `None` | Custom radius sequence (bypasses auto-radii if set) |
 | `r_cap` | `32` | Maximum radius from auto-radii |
-| `component_policy` | `"giant"` | `"giant"` or `"full"` — whether to restrict to the largest connected component |
-| `mean_mode` | `"geometric"` | `"geometric"` or `"arithmetic"` — aggregation across centers |
+| `component_policy` | `"giant"` | `"giant"` or `"all"` -- whether to restrict to the largest connected component |
+| `mean_mode` | `"geometric"` | `"geometric"` or `"arithmetic"` -- aggregation across centers |
 | `min_points` | `6` | Minimum radii in a candidate window |
 | `min_radius_ratio` | `3.0` | Minimum r_max / r_min for a window |
 | `r2_min` | `0.85` | Minimum R² for a window to be considered |
@@ -114,7 +114,7 @@ Post-hoc quality gate applied after estimation.
 
 **Presets:** `"inclusive"` (lenient) or `"strict"` (publication-grade). Individual parameters override preset values when provided.
 
-**Returns:** `(passed, reason, detail)` — boolean pass/fail, reason code, and optional detail string.
+**Returns:** `(passed, reason, detail)` -- boolean pass/fail, reason code, and optional detail string.
 
 ---
 
@@ -141,11 +141,14 @@ Mutable undirected graph. Nodes can be any hashable object. `add_edge` implicitl
 ```python
 @dataclass(frozen=True)
 class CompiledGraph:
-    n: int                          # number of nodes
-    adj: tuple[tuple[int, ...], ...]  # sorted adjacency lists
+    n: int                               # number of nodes
+    adj: tuple[tuple[int, ...], ...]     # sorted adjacency lists
+    label_to_id: dict[object, int]       # original label → internal int
+    id_to_label: tuple[object, ...]      # internal int → original label
 ```
 
 Immutable, integer-indexed graph with sorted adjacency lists for deterministic BFS.
+The label maps allow round-tripping between your original node labels and the internal integer IDs.
 
 ### `compile_to_undirected_metric_graph`
 
@@ -215,7 +218,7 @@ class LinFit:
     intercept: float     # y-intercept in log-log space
     r2: float            # coefficient of determination
     slope_stderr: float  # standard error of slope
-    sse: float           # sum of squared errors
+    sse: float           # sum of squared residuals
     n_points: int        # number of radii in the window
 ```
 

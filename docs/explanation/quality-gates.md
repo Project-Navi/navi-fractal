@@ -26,7 +26,7 @@ permissive; most genuine fractal networks produce R-squared above 0.99 in
 their best windows. The threshold exists to catch clear non-power-law
 behavior, not to enforce perfection.
 
-**Example triggers**: Random graphs (Erdos-Renyi, Barabasi-Albert) typically
+**Example triggers**: Random graphs (Erdős-Rényi, Barabási-Albert) typically
 fail this gate because their ball-mass growth follows an exponential or
 sigmoidal curve in log-log space, not a straight line. The result is
 `Reason.NO_WINDOW_PASSES_R2`.
@@ -54,12 +54,12 @@ growth. Reporting a "dimension" for such networks would be misleading.
 The AICc comparison is a principled way to ask: "is power-law scaling actually
 the right model, or does exponential fit just as well?"
 
-**Example triggers**: The (1,2)-flower network is a transfractal network with
-u=1, meaning the hub distance doesn't grow with generation (L_g = 1^g = 1).
-The analytical fractal dimension is infinite (or more precisely, undefined --
-the log-ratio diverges). On these networks, ball-mass growth is exponential
-rather than power-law, and the AICc gate correctly catches this. The result
-is `Reason.AICC_PREFERS_EXPONENTIAL`.
+**Example triggers**: Networks where ball-mass growth is exponential rather
+than power-law. The (1,2)-flower is a transfractal network with u=1 where
+mass growth saturates too rapidly to construct valid radii (it is refused
+earlier with `no_valid_radii`). The AICc gate catches networks that do
+produce enough radii for window construction but where exponential growth
+fits better than power-law.
 
 **Reason code**: `AICC_PREFERS_EXPONENTIAL`
 

@@ -1,0 +1,68 @@
+site_name: navi-fractal
+site_description: Audit-grade fractal dimension estimation for graphs
+site_url: https://project-navi.github.io/navi-fractal
+repo_url: https://github.com/Project-Navi/navi-fractal
+repo_name: Project-Navi/navi-fractal
+
+copyright: Copyright 2024-2026 Nelson Spence
+
+theme:
+  name: material
+  custom_dir: docs/overrides
+  logo: assets/logo.png
+  favicon: assets/favicon.png
+  palette:
+    scheme: slate
+  font: false
+  features:
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - content.code.copy
+    - toc.integrate
+
+extra_css:
+  - stylesheets/navi.css
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+
+plugins:
+  - search
+
+exclude_docs: |
+  internal/
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Installation: getting-started/installation.md
+    - Quickstart: getting-started/quickstart.md
+    - Interpreting Results: getting-started/interpreting-results.md
+  - How-To Guides:
+    - Bring Your Own Graph: how-to/bring-your-own-graph.md
+    - Tune Quality Gates: how-to/tune-quality-gates.md
+    - Run Calibration: how-to/run-calibration.md
+  - Explanation:
+    - How It Works: explanation/how-it-works.md
+    - Quality Gates: explanation/quality-gates.md
+    - Theory Bridge: explanation/theory-bridge.md
+    - Calibration Regime: explanation/calibration-regime.md
+  - Reference:
+    - API: reference/api.md
+    - Reason Codes: reference/reason-codes.md
+    - Changelog: reference/changelog.md

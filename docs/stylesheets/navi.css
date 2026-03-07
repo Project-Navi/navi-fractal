@@ -1,0 +1,95 @@
+/* Project Navi Brand Overrides for mkdocs-material
+   Brand guide: project-navi-brand-guide.html
+   Palette: #141414 bg, #e8e4de text, #7eb8a8 accent */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&family=Fraunces:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap');
+
+/* --- Color overrides --- */
+:root {
+  --md-primary-fg-color: #1a1a1a;
+  --md-primary-bg-color: #e8e4de;
+  --md-accent-fg-color: #7eb8a8;
+  --md-accent-bg-color: #4a7a6d;
+}
+
+[data-md-color-scheme="slate"] {
+  --md-default-bg-color: #141414;
+  --md-default-fg-color: #e8e4de;
+  --md-default-fg-color--light: #9a958e;
+  --md-default-fg-color--lighter: #8a867f;
+  --md-code-bg-color: #1a1a1a;
+  --md-typeset-a-color: #7eb8a8;
+  --md-footer-bg-color: #1a1a1a;
+  --md-footer-bg-color--dark: #141414;
+}
+
+/* --- Typography --- */
+:root {
+  --md-text-font: "DM Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  --md-code-font: "JetBrains Mono", Consolas, monospace;
+}
+
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3,
+.md-typeset h4 {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+}
+
+.md-typeset {
+  font-weight: 300;
+  line-height: 1.7;
+}
+
+/* --- Code in accent --- */
+.md-typeset code {
+  color: #7eb8a8;
+}
+
+/* --- Navigation accent --- */
+.md-nav__link--active,
+.md-nav__link:hover {
+  color: #7eb8a8 !important;
+}
+
+/* --- Admonition accent borders --- */
+.md-typeset .admonition,
+.md-typeset details {
+  border-color: #7eb8a8;
+}
+
+/* --- Hero glow (landing page only) --- */
+.md-content .hero-glow {
+  position: relative;
+}
+
+.md-content .hero-glow::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 200px;
+  background: radial-gradient(
+    ellipse at center top,
+    rgba(126, 184, 168, 0.08) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* --- Card-like containers --- */
+.md-typeset .grid-card {
+  background: #1f1f1f;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+/* --- Footer muted --- */
+.md-footer-meta {
+  color: #8a867f;
+}

@@ -343,7 +343,7 @@ def estimate_sandbox_dimension(
 
     for i, r in enumerate(radii_list):
         mean_mass_eff = math.exp(mean_log_m[i]) if mean_mode == "geometric" else mean_m[i]
-        if mean_mass_eff <= 1.0:
+        if mean_mass_eff <= 1.0 and r > 1:
             continue
         if mean_mass_eff >= sat_thresh:
             continue

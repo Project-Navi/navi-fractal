@@ -21,13 +21,13 @@ relative to interior) and diminishes as graphs grow.
 
 Calibrating against networks with known analytical dimensions lets us quantify
 this effect precisely. We use (u,v)-flower networks because their fractal
-dimension d_B = log(u+v)/log(u) is known exactly from the construction, and
+dimension \( d_B = \frac{\log(u+v)}{\log u} \) is known exactly from the construction, and
 this formula has been formally proved in Lean 4 (see
 [Theory Bridge](theory-bridge.md)).
 
 ## The calibration table
 
-| Family | Gen | Nodes | Analytical d_B | Sandbox D | Gap |
+| Family | Gen | Nodes | Analytical \( d_B \) | Sandbox \( D \) | Gap |
 |--------|-----|-------|----------------|-----------|-----|
 | (2,2)-flower | 4 | 172 | 2.000 | 1.380 | -31.0% |
 | (2,2)-flower | 5 | 684 | 2.000 | 1.635 | -18.2% |
@@ -49,16 +49,16 @@ WLS, curvature guard on, slope stability guard off.
 ## Convergence behavior
 
 The gap generally shrinks with network size. This is consistent with the
-O(1/g) convergence rate established by the Lean squeeze bounds in
+\( O(1/g) \) convergence rate established by the Lean squeeze bounds in
 fd-formalization. As the generation increases, the graph grows exponentially
-(each generation multiplies the edge count by u+v), and the boundary effects
+(each generation multiplies the edge count by \( u+v \)), and the boundary effects
 that cause underestimation become proportionally smaller.
 
-Fitting gap(g) = a/g + b per flower family gives:
+Fitting \( \text{gap}(g) = a/g + b \) per flower family gives:
 
-- **Empirical rate constant**: the fitted |a| values are 2--4x the theoretical
-  bound from the Lean squeeze (100 * log(2) / log(u+v)).
-- **Amplification factor**: this ratio |a_empirical| / a_theoretical is
+- **Empirical rate constant**: the fitted \( |a| \) values are 2--4x the theoretical
+  bound from the Lean squeeze \( \frac{100 \log 2}{\log(u+v)} \).
+- **Amplification factor**: this ratio \( |a_{\text{empirical}}| / a_{\text{theoretical}} \) is
   consistently greater than 1 across all families. This is expected because
   the theoretical bound applies to the global log-ratio (total vertex count
   divided by hub distance), while the sandbox measures a different geometric
@@ -79,7 +79,7 @@ happens:
 
 1. At gen 7 (10,924 nodes), the window search finds a wide scaling window
    where the log-log plot is approximately linear. The curvature guard
-   passes, the R-squared is high, and the slope lands at 1.881.
+   passes, the \( R^2 \) is high, and the slope lands at 1.881.
 
 2. At gen 8 (43,692 nodes), the graph is larger and the potential radius
    range is wider. But the wider range also reveals curvature that wasn't
@@ -93,7 +93,7 @@ happens:
    working as designed. At gen 8, the widest curvature-clean window is
    different from the one that would minimize the gap to the analytical
    dimension. The algorithm doesn't know the analytical dimension -- it
-   is optimizing for measurement quality (wide window, high R-squared, low
+   is optimizing for measurement quality (wide window, high \( R^2 \), low
    stderr), not for proximity to a number it doesn't have access to.
 
 This reversal illustrates why the sandbox measures *local ball-mass scaling*,
@@ -107,17 +107,17 @@ of empirical convergence against the theoretical bound:
 
 - Reads the calibration report (`scripts/calibration-report.json`)
 - Groups results by flower family
-- Fits gap(g) = a/g + b via least squares for each family
-- Computes the theoretical rate constant: 100 * log(2) / log(u+v)
+- Fits \( \text{gap}(g) = a/g + b \) via least squares for each family
+- Computes the theoretical rate constant: \( \frac{100 \log 2}{\log(u+v)} \)
 - Reports the amplification factor and flags non-monotonic convergence
 
 The theoretical bound comes from the Lean squeeze in `FlowerLog.lean`:
 
-```
-log(N_g) - g * log(w) <= log(2)
-```
+\[
+\log N_g - g \log w \le \log 2
+\]
 
-Dividing by g * log(u) and expressing as a percentage of d_B gives the rate
+Dividing by \( g \log u \) and expressing as a percentage of \( d_B \) gives the rate
 constant. The empirical rate constant from the sandbox is larger because the
 sandbox gap includes contributions from window selection, center sampling,
 saturation filtering, and the fundamental geometric difference between global
@@ -135,11 +135,11 @@ should not have a finite fractal dimension are correctly refused:
   The small-world property means ball mass saturates within a few hops,
   leaving insufficient radii for window construction.
 - **Complete graphs**: refused with `trivial_graph`. Diameter is 1.
-- **(1,2)-flower** (transfractal, u=1): refused with `no_valid_radii`.
-  With u=1, the hub distance is L_g = 1 for all generations -- the network
+- **(1,2)-flower** (transfractal, \( u = 1 \)): refused with `no_valid_radii`.
+  With \( u = 1 \), the hub distance is \( L_g = 1 \) for all generations -- the network
   grows but doesn't stretch. Ball-mass growth saturates too rapidly for any
   meaningful radius sequence.
 
 These refusals are as important as the acceptances. A fractal dimension tool
-that reports D=2.3 for a Barabási-Albert network is worse than useless -- it
+that reports \( D = 2.3 \) for a Barabási-Albert network is worse than useless -- it
 gives false confidence. The refusal is the feature.

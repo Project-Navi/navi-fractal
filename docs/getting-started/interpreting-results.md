@@ -40,7 +40,7 @@ Both `powerlaw_fit` and `exponential_fit` are `LinFit` dataclasses with these fi
 |-------|------|---------|
 | `slope` | `float` | The regression slope. For `powerlaw_fit`, this is the dimension estimate. |
 | `intercept` | `float` | The regression intercept in log-log (power-law) or log-linear (exponential) space. |
-| `r2` | `float` | Coefficient of determination. 1.0 is a perfect fit. |
+| `r2` | `float` | Coefficient of determination (\( R^2 \)). 1.0 is a perfect fit. |
 | `slope_stderr` | `float` | Standard error of the slope estimate. Smaller means more precise. |
 | `sse` | `float` | Sum of squared residuals. |
 | `n_points` | `int` | Number of data points in the regression window. |
@@ -54,8 +54,8 @@ contiguous range of radii where the log-log relationship was evaluated.
 |-------|------|---------|
 | `window_r_min` | `int \| None` | Smallest radius in the selected window. |
 | `window_r_max` | `int \| None` | Largest radius in the selected window. |
-| `window_log_span` | `float \| None` | log(r_max) - log(r_min). Measures how many decades the scaling window covers. Wider is generally more convincing. |
-| `window_delta_y` | `float \| None` | Vertical span in log-log space: max(log M) - min(log M) across the window. A narrow delta_y means the mass barely changes, which makes slope estimation fragile. |
+| `window_log_span` | `float \| None` | \( \log r_{\max} - \log r_{\min} \). Measures how many decades the scaling window covers. Wider is generally more convincing. |
+| `window_delta_y` | `float \| None` | Vertical span in log-log space: \( \max(\log M) - \min(\log M) \) across the window. A narrow delta_y means the mass barely changes, which makes slope estimation fragile. |
 | `window_slope_range` | `float \| None` | Maximum minus minimum slope across sub-windows within the selected window. Only populated when the slope stability guard is enabled. Small values indicate consistent scaling. |
 | `window_aicc_quad_minus_lin` | `float \| None` | AICc(quadratic) minus AICc(linear) for the selected window. Positive values mean the linear (power-law) model is preferred over a quadratic. Negative values would indicate curvature, but those windows are already rejected by the curvature guard. |
 
@@ -101,9 +101,9 @@ prompt closer inspection before relying on a dimension estimate:
 
 | Signal | What it means |
 |--------|--------------|
-| `r2 < 0.95` | Weak power-law fit -- the log-log relationship has substantial scatter. The dimension estimate may be unreliable. |
-| `delta_aicc < 5` | Marginal model preference -- the exponential model fits nearly as well as the power law. Consider whether power-law scaling is genuinely present. |
-| `window_log_span < 0.5` | Narrow scaling window -- the estimate is based on less than half a decade of radii. Small windows can produce good R² values by chance. |
+| \( R^2 < 0.95 \) | Weak power-law fit -- the log-log relationship has substantial scatter. The dimension estimate may be unreliable. |
+| \( \Delta\text{AICc} < 5 \) | Marginal model preference -- the exponential model fits nearly as well as the power law. Consider whether power-law scaling is genuinely present. |
+| \( \log\text{-span} < 0.5 \) | Narrow scaling window -- the estimate is based on less than half a decade of radii. Small windows can produce good \( R^2 \) values by chance. |
 | `retained_fraction < 0.5` | Most nodes were disconnected from the giant component. The measurement reflects the largest fragment, not the whole graph. |
 | `bootstrap_valid_reps < 20` | Too few valid bootstrap replicates to produce a reliable confidence interval. The CI bounds may be misleading. |
 

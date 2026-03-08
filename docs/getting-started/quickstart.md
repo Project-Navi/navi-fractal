@@ -56,7 +56,7 @@ Some common refusal reasons:
 |--------|--------------|
 | `trivial_graph` | Graph is too small or has diameter <= 1 |
 | `no_valid_radii` | Not enough distinct radii to fit a window |
-| `no_window_passes_r2` | No contiguous window achieves the R² threshold |
+| `no_window_passes_r2` | No contiguous window achieves the \( R^2 \) threshold |
 | `aicc_prefers_exponential` | An exponential model fits the data better than a power law |
 | `curvature_guard` | The log-log plot has significant curvature (quadratic beats linear) |
 
@@ -129,7 +129,7 @@ standards: "Is this measurement good enough for my purpose?"
 
 Two presets are available:
 
-| Preset | R² min | Stderr max | Radius ratio | Delta AICc | Log span |
+| Preset | \( R^2 \) min | Stderr max | Radius ratio | \( \Delta \)AICc | Log span |
 |--------|--------|-----------|-------------|-----------|---------|
 | `inclusive` | 0.85 | 0.25 | 3.0 | 1.5 | log(3) |
 | `strict` | 0.95 | 0.20 | 4.0 | 3.0 | log(4) |

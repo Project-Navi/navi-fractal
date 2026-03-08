@@ -48,7 +48,7 @@ Every result passes through a chain of statistical gates before emission:
 
 | Gate | What it checks |
 |------|---------------|
-| **R² threshold** | Power-law fit must actually fit |
+| **\( R^2 \) threshold** | Power-law fit must actually fit |
 | **AICc model selection** | Power-law must beat exponential decisively |
 | **Curvature guard** | Reject windows where quadratic fits better |
 | **Slope stability** | Reject windows with high local slope dispersion |

@@ -6,17 +6,18 @@ stage exists, and how the pieces fit together.
 
 ## The idea
 
-In a fractal graph, the number of nodes reachable within distance *r* of a
+In a fractal graph, the number of nodes reachable within distance \( r \) of a
 center node grows as a power law:
 
-```
-M(r) ~ r^D
-```
+\[
+M(r) \sim r^D
+\]
 
-The exponent *D* is the fractal dimension. If you plot log M(r) against log r
-and see a straight line, the slope of that line is *D*. If you don't see a
-straight line, the graph probably isn't fractal -- and navi-fractal will refuse
-to report a dimension rather than giving you a meaningless number.
+The exponent \( D \) is the fractal dimension. If you plot \( \log M(r) \)
+against \( \log r \) and see a straight line, the slope of that line is \( D \).
+If you don't see a straight line, the graph probably isn't fractal -- and
+navi-fractal will refuse to report a dimension rather than giving you a
+meaningless number.
 
 The sandbox method works by picking random centers, measuring ball masses at
 a range of radii, and looking for the radius window where the power-law
@@ -82,7 +83,7 @@ sparse where it doesn't, and never so large that saturation dominates.
 For each of `n_centers` randomly chosen center nodes (default 256, sampled
 with replacement from a seeded RNG), a full BFS computes the distance from
 the center to every reachable node. Then `ball_mass(distances, r)` counts
-nodes within distance r (inclusive) for each radius in the list. The result is
+nodes within distance \( r \) (inclusive) for each radius in the list. The result is
 a matrix: one row per center, one column per radius.
 
 ### Step 6: Aggregation
@@ -91,11 +92,12 @@ The per-center masses are aggregated across centers at each radius. Two modes
 are available:
 
 - **Geometric mean** (default, `mean_mode="geometric"`): the y-values for
-  regression are the arithmetic means of log(mass) across centers. This is
-  natural because the regression itself happens in log-log space. It also
-  down-weights outlier centers that happen to sit near the graph boundary.
+  regression are the arithmetic means of \( \log(\text{mass}) \) across centers.
+  This is natural because the regression itself happens in log-log space. It
+  also down-weights outlier centers that happen to sit near the graph boundary.
 - **Arithmetic mean** (`mean_mode="arithmetic"`): the y-values are
-  log(arithmetic mean of mass). This is more sensitive to high-mass centers.
+  \( \log(\text{arithmetic mean of mass}) \). This is more sensitive to
+  high-mass centers.
 
 When weighted least squares is enabled (the default), the inverse variance of
 the per-center log-masses is used as the weight for each radius, with a
@@ -116,21 +118,23 @@ search** over all contiguous sub-sequences of the filtered radii that have at
 least `min_points` entries (default 6). For each candidate window:
 
 1. **Log-span check**: the window must span at least `min_radius_ratio`
-   (default 3.0) in radius, measured as `log(r_max/r_min) >= log(3.0)`.
-   Narrow windows produce unreliable slopes.
+   (default 3.0) in radius, measured as
+   \( \log(r_{\max}/r_{\min}) \geq \log(3.0) \). Narrow windows produce
+   unreliable slopes.
 
-2. **Delta-y check**: the vertical span `max(y) - min(y)` in the window must
-   exceed `min_delta_y` (default 0.5). Flat windows (where mass barely changes
-   with radius) produce near-zero slopes with enormous relative error.
+2. **Delta-y check**: the vertical span \( \max(y) - \min(y) \) in the window
+   must exceed `min_delta_y` (default 0.5). Flat windows (where mass barely
+   changes with radius) produce near-zero slopes with enormous relative error.
 
-3. **Regression**: OLS or WLS fit of `log(M)` vs `log(r)`. The slope is the
-   candidate dimension.
+3. **Regression**: OLS or WLS fit of \( \log M \) vs \( \log r \). The slope
+   is the candidate dimension.
 
-4. **R-squared gate**: the fit must achieve `r2 >= r2_min` (default 0.85).
+4. **\( R^2 \) gate**: the fit must achieve \( R^2 \geq \) `r2_min`
+   (default 0.85).
 
 5. **AICc model selection**: compute AICc for both the power-law fit (linear
-   in log-log) and an exponential fit (linear in `r` vs `log(M)`). The
-   power-law must win by at least `delta_power_win` (default 1.5) in AICc.
+   in log-log) and an exponential fit (linear in \( r \) vs \( \log M \)).
+   The power-law must win by at least `delta_power_win` (default 1.5) in AICc.
 
 6. **Curvature guard** (optional, on by default): fit a quadratic in log-log
    and compare its AICc against the linear fit. If the quadratic wins by
@@ -141,7 +145,7 @@ least `min_points` entries (default 6). For each candidate window:
    (default 0.5).
 
 Windows that survive all gates are scored by a lexicographic key:
-`(log_span, R-squared, -slope_stderr)`. Wider windows win first; among
+(log-span, \( R^2 \), −slope stderr). Wider windows win first; among
 equally wide windows, better fit quality wins. The best-scoring survivor
 is the final answer.
 
@@ -164,13 +168,13 @@ window bounds, AICc scores, bootstrap counts. Nothing is hidden.
 
 | Step | What happens |
 |------|-------------|
-| Compile | Input graph -> deterministic undirected metric graph |
+| Compile | Input graph → deterministic undirected metric graph |
 | Component | Optionally restrict to giant connected component |
 | Diameter | Two-sweep BFS heuristic |
 | Radii | Dense prefix + log-spaced tail, capped at 30% of diameter |
-| BFS mass | Seeded random centers, ball sizes M(r) at each radius |
+| BFS mass | Seeded random centers, ball sizes \( M(r) \) at each radius |
 | Aggregate | Geometric or arithmetic mean across centers |
-| Window search | Exhaustive search with R-squared, AICc, curvature, slope stability gates |
+| Window search | Exhaustive search with \( R^2 \), AICc, curvature, slope stability gates |
 | Bootstrap | Resample centers for confidence intervals |
 | Result | Full diagnostic dataclass or refusal with reason |
 

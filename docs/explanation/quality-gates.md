@@ -10,26 +10,25 @@ candidate window must survive every gate to be considered. If no window
 survives, the result is a refusal with the reason code of the highest-priority
 gate that rejected the best candidate.
 
-## R-squared threshold
+## \( R^2 \) threshold
 
 **Parameter**: `r2_min` (default 0.85)
 
-**What it checks**: The coefficient of determination (R-squared) for the
-power-law fit within the candidate window. R-squared measures what fraction
-of the variance in log(M) is explained by the linear relationship with log(r).
+**What it checks**: The coefficient of determination (\( R^2 \)) for the
+power-law fit within the candidate window. \( R^2 \) measures what fraction
+of the variance in \( \log M \) is explained by the linear relationship with \( \log r \).
 
-**Why it exists**: A low R-squared means the data points in the window don't
-follow a straight line in log-log space. If log(M) vs log(r) isn't linear,
+**Why it exists**: A low \( R^2 \) means the data points in the window don't
+follow a straight line in log-log space. If \( \log M \) vs \( \log r \) isn't linear,
 the "dimension" extracted from the slope is not meaningful -- you're fitting a
 line to something that isn't a line. The 0.85 default is deliberately
-permissive; most genuine fractal networks produce R-squared above 0.99 in
+permissive; most genuine fractal networks produce \( R^2 \) above 0.99 in
 their best windows. The threshold exists to catch clear non-power-law
 behavior, not to enforce perfection.
 
 **Example triggers**: Random graphs (Erdős-Rényi, Barabási-Albert) typically
 fail this gate because their ball-mass growth follows an exponential or
-sigmoidal curve in log-log space, not a straight line. The result is
-`Reason.NO_WINDOW_PASSES_R2`.
+sigmoidal curve in log-log space, not a straight line.
 
 **Reason code**: `NO_WINDOW_PASSES_R2`
 
@@ -40,8 +39,17 @@ sigmoidal curve in log-log space, not a straight line. The result is
 **What it checks**: The Akaike Information Criterion (corrected for small
 samples) is computed for two competing models fit to the same window data:
 
-- **Power-law**: log(M) = D * log(r) + c (linear in log-log)
-- **Exponential**: log(M) = a * r + b (linear in r)
+- **Power-law** (linear in log-log):
+
+\[
+\log M = D \log r + c
+\]
+
+- **Exponential** (linear in \( r \)):
+
+\[
+\log M = a \cdot r + b
+\]
 
 The power-law model must have an AICc at least `delta_power_win` lower than
 the exponential model. Lower AICc means better fit after penalizing for model
@@ -71,9 +79,9 @@ fits better than power-law.
 **What it checks**: Within the candidate window, fit a quadratic model in
 log-log space:
 
-```
-log(M) = a * log(r)^2 + b * log(r) + c
-```
+\[
+\log M = a (\log r)^2 + b \log r + c
+\]
 
 If the quadratic model's AICc is more than `delta_quadratic_win` lower than
 the linear model's AICc, the window is rejected. The quadratic has one extra
@@ -91,7 +99,7 @@ than averaging over a curved region and calling the average slope a
 "dimension."
 
 **Example triggers**: Large-generation flower networks at wide windows. At
-gen 8 of the (2,2)-flower, the widest windows that pass R-squared still show
+gen 8 of the (2,2)-flower, the widest windows that pass \( R^2 \) still show
 detectable curvature from boundary effects. The curvature guard correctly
 rejects these, forcing the algorithm to select a narrower (but straighter)
 window. This is one mechanism behind the gen 7 to 8 reversal in the
@@ -159,7 +167,7 @@ complexity without practical benefit.
 **Parameter**: `min_delta_y` (default 0.5)
 
 **What it checks**: The vertical span of the candidate window in log-log
-space: `max(log M) - min(log M)` across the radii in the window. If this
+space: \( \max(\log M) - \min(\log M) \) across the radii in the window. If this
 span is less than `min_delta_y`, the window is skipped.
 
 **Why it exists**: When ball mass barely changes across a range of radii --
@@ -169,11 +177,11 @@ small perturbations in mass produce large changes in the fitted slope. The
 `min_delta_y` threshold ensures that the window contains enough "dynamic
 range" in mass growth for the slope to be meaningful.
 
-The default of 0.5 corresponds to a mass ratio of about e^0.5 ~ 1.65x from
+The default of 0.5 corresponds to a mass ratio of about \( e^{0.5} \approx 1.65\times \) from
 the smallest to largest radius in the window. This is conservative -- most
 genuine scaling windows show mass changing by orders of magnitude.
 
 **How it interacts with other gates**: The delta-y check is applied early in
 the window search loop, before regression. This is an optimization: windows
-with tiny vertical span are almost certain to fail R-squared or produce
+with tiny vertical span are almost certain to fail \( R^2 \) or produce
 unstable slopes, so rejecting them early saves computation.

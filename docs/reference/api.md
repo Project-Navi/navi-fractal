@@ -73,7 +73,7 @@ Estimate the sandbox (mass-radius) fractal dimension of a graph.
 | `mean_mode` | `"geometric"` | `"geometric"` or `"arithmetic"` -- aggregation across centers |
 | `min_points` | `6` | Minimum radii in a candidate window |
 | `min_radius_ratio` | `3.0` | Minimum r_max / r_min for a window |
-| `r2_min` | `0.85` | Minimum R² for a window to be considered |
+| `r2_min` | `0.85` | Minimum \( R^2 \) for a window to be considered |
 | `min_delta_y` | `0.5` | Minimum vertical span in log-log space |
 | `max_saturation_frac` | `0.95` | Maximum fraction of total nodes for a radius to be included |
 | `delta_power_win` | `1.5` | Minimum AICc advantage for power-law over exponential |
@@ -248,10 +248,10 @@ See [Reason Codes](reason-codes.md) for detailed descriptions of each value.
 |-------|---------|
 | `ACCEPTED` | All gates passed |
 | `EMPTY_GRAPH` | No nodes |
-| `TRIVIAL_GRAPH` | Diameter ≤ 1 |
+| `TRIVIAL_GRAPH` | Diameter \( \leq 1 \) |
 | `GIANT_COMPONENT_TOO_SMALL` | Giant component too small |
 | `NO_VALID_RADII` | Too few radii |
-| `NO_WINDOW_PASSES_R2` | No window meets R² threshold |
+| `NO_WINDOW_PASSES_R2` | No window meets \( R^2 \) threshold |
 | `AICC_PREFERS_EXPONENTIAL` | Exponential fits better |
 | `CURVATURE_GUARD` | Significant curvature in log-log |
 | `SLOPE_STABILITY_GUARD` | Unstable local slopes |

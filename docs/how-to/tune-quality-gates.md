@@ -15,7 +15,7 @@ the best candidate.
 
 | Parameter | Default | What it controls |
 |-----------|---------|-----------------|
-| `r2_min` | `0.85` | Minimum R-squared for a window to be considered |
+| `r2_min` | `0.85` | Minimum \( R^2 \) for a window to be considered |
 | `delta_power_win` | `1.5` | Minimum AICc advantage for power-law over exponential |
 | `curvature_guard` | `True` | Whether to check for quadratic curvature in the scaling window |
 | `delta_quadratic_win` | `3.0` | Minimum AICc advantage for quadratic over linear (rejects when exceeded) |
@@ -44,7 +44,7 @@ result = estimate_sandbox_dimension(
 )
 ```
 
-This lowers the R-squared threshold, weakens the power-law vs. exponential
+This lowers the \( R^2 \) threshold, weakens the power-law vs. exponential
 discrimination, and accepts narrower scaling windows. Use the result for
 hypothesis generation, not publication.
 
@@ -66,7 +66,7 @@ result = estimate_sandbox_dimension(
 
 Enabling `slope_stability_guard` adds a check that the local slope does not vary
 by more than `max_slope_range` across sub-windows. This catches cases where a
-high global R-squared masks a systematic drift in the local exponent. Raising
+high global \( R^2 \) masks a systematic drift in the local exponent. Raising
 `min_radius_ratio` to 4.0 requires the scaling window to span at least a factor
 of 4 in radius.
 
@@ -91,11 +91,11 @@ Two built-in presets define threshold bundles:
 
 | Threshold | `"inclusive"` (default) | `"strict"` |
 |-----------|----------------------|-----------|
-| R-squared minimum | 0.85 | 0.95 |
+| \( R^2 \) minimum | 0.85 | 0.95 |
 | Slope stderr maximum | 0.25 | 0.20 |
 | Radius ratio minimum | 3.0 | 4.0 |
 | Delta-AICc minimum | 1.5 | 3.0 |
-| Log-span minimum | ln(3) ~= 1.10 | ln(4) ~= 1.39 |
+| Log-span minimum | \( \ln 3 \approx 1.10 \) | \( \ln 4 \approx 1.39 \) |
 
 ### Applying the post-hoc gate
 
@@ -119,7 +119,7 @@ passed, reason, detail = sandbox_quality_gate(result, preset="strict")
 ```
 
 The strict preset is appropriate for publication-grade claims. It requires higher
-R-squared, tighter standard error, a wider scaling window, and stronger AICc
+\( R^2 \), tighter standard error, a wider scaling window, and stronger AICc
 discrimination.
 
 ### Overriding individual thresholds

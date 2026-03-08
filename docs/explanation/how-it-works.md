@@ -81,10 +81,12 @@ sparse where it doesn't, and never so large that saturation dominates.
 ### Step 5: BFS mass measurement
 
 For each of `n_centers` randomly chosen center nodes (default 256, sampled
-with replacement from a seeded RNG), a full BFS computes the distance from
-the center to every reachable node. Then `ball_mass(distances, r)` counts
-nodes within distance \( r \) (inclusive) for each radius in the list. The result is
-a matrix: one row per center, one column per radius.
+with replacement from a seeded RNG), `bfs_layer_counts` runs a full BFS and
+returns an array where `counts[d]` is the number of nodes at exactly distance
+`d` from the center. Then `masses_from_layer_counts` builds a prefix sum over
+these layer counts and reads off the ball mass \( M(r) \) at each radius in
+\( O(1) \) per radius. The result is a matrix: one row per center, one column
+per radius.
 
 ### Step 6: Aggregation
 

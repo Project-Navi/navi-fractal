@@ -20,9 +20,9 @@ recursive networks built by edge replacement. At each generation, every edge is
 replaced by two parallel paths of length u and v. The resulting graph has an
 exact box-counting dimension:
 
-```
-d_B = log(u + v) / log(u)
-```
+\[
+d_B = \frac{\log(u + v)}{\log u}
+\]
 
 This formula is proved analytically (and formally verified in Lean 4 in the
 companion fd-formalization project). Because the dimension is exact and the

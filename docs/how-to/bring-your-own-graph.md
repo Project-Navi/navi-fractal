@@ -134,9 +134,11 @@ retained.
 
 ## Performance considerations
 
-Estimation time scales as `O(n_centers * max_radius * avg_degree)`. The default
-`n_centers=256` keeps this practical for graphs up to roughly 100K nodes on
-commodity hardware. For larger graphs:
+Estimation time scales as `O(n_centers * (n + m))` where `n` and `m` are
+the node and edge counts of the measured component. Each center requires a
+full BFS (layer counts), after which ball masses at all radii are computed
+via prefix sums. The default `n_centers=256` keeps this practical for graphs
+up to roughly 100K nodes on commodity hardware. For larger graphs:
 
 - Reduce `n_centers` (e.g., `n_centers=64`) for a faster but noisier estimate.
 - Lower `r_cap` (default 32) if the diameter is large and you only need

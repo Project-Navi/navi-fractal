@@ -42,6 +42,12 @@ pre-commit install
 
 # Run all pre-commit hooks
 pre-commit run --all-files
+
+# Run calibration (quick mode skips 3 slow flower generations)
+uv run python scripts/calibrate.py --quick
+
+# Run full calibration (all 19 graphs, ~14s)
+uv run python scripts/calibrate.py
 ```
 
 ## CI
@@ -75,11 +81,12 @@ Core exports (v0.1.0):
 ### Module Layout
 
 - `_graph.py` — `Graph`, `CompiledGraph`, compiler, helper constructors
-- `_bfs.py` — BFS layer counts, mass computation, diameter estimation
+- `_bfs.py` — BFS layer counts + prefix-sum mass computation, diameter estimation
 - `_regression.py` — `LinFit`, OLS, WLS, AICc, quadratic fit
 - `_sandbox.py` — `estimate_sandbox_dimension()`, `SandboxResult`, quality gates
 - `_null_model.py` — degree-preserving Maslov-Sneppen rewiring
 - `_radii.py` — automatic radius selection (dense prefix + log-spaced tail)
+- `_types.py` — shared types: `Reason`, `LinFit`, `DimensionSummary`, `ModelPreference`
 
 ### Pipeline
 
@@ -87,7 +94,7 @@ Core exports (v0.1.0):
 2. **Component selection** — optionally restrict to giant connected component
 3. **Diameter estimation** — two-sweep BFS heuristic
 4. **Radii selection** — dense prefix + log-spaced tail, capped at 30% of diameter
-5. **BFS mass collection** — seeded random centers, ball sizes M(r) at each radius
+5. **BFS mass collection** — seeded random centers, layer counts + prefix sums for M(r)
 6. **Moment aggregation** — geometric or arithmetic mean across centers
 7. **Window search** — exhaustive over contiguous radius windows with quality gates
 8. **Bootstrap** — resample centers for confidence intervals
@@ -104,15 +111,63 @@ Core exports (v0.1.0):
 
 Every refusal includes a machine-readable `reason` string.
 
+## Operational Standards
+
+### Before every commit
+
+1. **Tests pass**: `uv run pytest tests/ -v --benchmark-disable` — all green, no skips
+2. **Lint clean**: `uv run ruff check src/ tests/` — zero warnings
+3. **Format clean**: `uv run ruff format --check src/ tests/` — zero diffs
+4. **Types clean**: `uv run mypy --strict src/navi_fractal/` — zero errors
+5. **Calibration holds**: `uv run python scripts/calibrate.py --quick` — all v4-nf deltas within ±0.005
+
+If any gate fails, fix before committing. Do not use `--no-verify` or skip hooks.
+
+### Before any numerical change
+
+Any change to BFS, regression, window search, or quality gate logic must be validated against the calibration instrument. The calibration table is the ground truth for "did I break the math." Run `scripts/calibrate.py --quick` (16 graphs, ~2s) at minimum, full run (19 graphs, ~14s) for anything touching BFS or radii.
+
+### Test discipline
+
+- **TDD**: write failing test → implement → verify → commit
+- **Unit tests**: one behavior per test, descriptive name, no setup sharing between tests
+- **Integration tests**: v4_smoke/ validates against the reference implementation
+- **Calibration**: scripts/calibrate.py is the numerical validation instrument — it is not a test suite, it is a measurement audit
+- **Never weaken a test to make it pass** — if a test fails, either the code is wrong or the test expectation needs updating with justification
+
+### Code hygiene
+
+- **No dead code** — delete it, don't comment it out
+- **No TODO/FIXME without an issue** — if it's worth noting, it's worth tracking
+- **Internal modules prefixed with `_`** — the public API is `__init__.py`, everything else is private
+- **Frozen dataclasses for all results** — immutability is a correctness guarantee
+- **Deterministic outputs** — given the same seed and Python version, every function produces identical results
+- **No silent fallbacks** — if something fails, refuse explicitly with a reason code
+
+### Git discipline
+
+- **Conventional commits**: `feat:`, `fix:`, `test:`, `perf:`, `chore:`, `docs:`, `build:`
+- **Atomic commits**: one logical change per commit, never mix refactors with features
+- **No force push to main** — ever
+- **No remote push without explicit approval** — local only until told otherwise
+- **Co-author line**: `Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>`
+- **Branch naming**: `feat/`, `fix/`, `perf/`, `docs/` prefixes
+
+### Documentation
+
+- **Docs site**: Zensical-powered, GitHub Pages deployment
+- **Brand**: Project Navi brand guide (see `Project-Navi/brand` repo)
+- **CSS**: `docs/stylesheets/navi.css` — shared brand stylesheet, do not edit per-page
+- **MathJax**: enabled via arithmatex + `docs/javascripts/mathjax.js` — use `\( \)` for inline, `\[ \]` for display math
+- **Diataxis**: tutorials (getting-started/), how-to (how-to/), explanation (explanation/), reference (reference/)
+
 ## Conventions
 
-- **Conventional commits:** `feat:`, `fix:`, `test:`, `chore:`, `docs:`
 - **Line length:** 100 (ruff + mypy strict)
-- **TDD:** write failing test -> implement -> verify -> commit
 - **`NullHandler` on library logger** — app configures handlers, not the library
 - **All estimation functions return frozen dataclasses** with full audit trail
 - **Deterministic given same seed and Python version** — compiled graph guarantees traversal order
-- **No remote push** without explicit approval — local only until told otherwise
+- **Copyright headers**: `# Copyright 2024-2026 Nelson Spence` + `# SPDX-License-Identifier: Apache-2.0` on every .py file
 
 ## Gotchas
 
@@ -120,3 +175,14 @@ Every refusal includes a machine-readable `reason` string.
 - **pytest-benchmark `pedantic()`** required for large graphs — standard mode runs too many iterations
 - **No CLI, no config files, no framework dependencies** — this is a library only
 - **Float precision** — regression results are deterministic for a given Python version but not guaranteed bit-identical across platforms
+- **BFS performance** — pure Python BFS is the bottleneck on large graphs (>10K nodes). The layer-count algorithm is correct; the interpreter overhead is the constraint. Rust extension planned for v0.2.0.
+
+## Calibration Instrument
+
+The calibration script (`scripts/calibrate.py`) is the primary validation tool for numerical correctness. It runs navi-fractal side-by-side with the v4 reference implementation on (u,v)-flower networks with analytically known dimensions.
+
+- **Quick mode** (`--quick`): 16 graphs, ~2s — sufficient for most changes
+- **Full mode**: 19 graphs including gen 7+8 for (2,2)-flower and gen 6 for (2,3)-flower, ~14s
+- **Output**: `scripts/calibration-report.json` — committed baseline, diffable across changes
+- **Tolerance**: v4-nf delta within ±0.005 across all emit cases
+- **Known characteristic**: (2,2)-flower gen 7→8 shows non-monotonic convergence (gap reversal from -6.0% to -9.5%). This is a measurement characteristic, not a bug — different window selections at different scales.

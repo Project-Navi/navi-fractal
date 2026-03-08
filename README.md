@@ -11,7 +11,7 @@
 
 <p align="center">
   <a href="https://github.com/Project-Navi/navi-fractal/actions"><img src="https://github.com/Project-Navi/navi-fractal/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <a href="https://pypi.org/project/navi-fractal/"><img src="https://img.shields.io/pypi/v/navi-fractal" alt="PyPI"></a>
+  <a href="https://pypi.org/project/navi-fractal/"><img src="https://img.shields.io/badge/PyPI-coming%20soon-lightgrey" alt="PyPI"></a>
   <img src="https://img.shields.io/badge/python-3.12+-3776AB?logo=python&logoColor=white" alt="Python 3.12+">
   <img src="https://img.shields.io/badge/dependencies-0-brightgreen" alt="Zero deps">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache_2.0-orange" alt="License"></a>

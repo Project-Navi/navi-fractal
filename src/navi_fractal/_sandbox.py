@@ -14,7 +14,7 @@ import random
 from collections.abc import Sequence
 from dataclasses import dataclass
 
-from navi_fractal._bfs import ball_mass, bfs_layers, estimate_diameter
+from navi_fractal._bfs import bfs_layer_counts, estimate_diameter, masses_from_layer_counts
 from navi_fractal._graph import CompiledGraph, Graph, compile_to_undirected_metric_graph
 from navi_fractal._radii import auto_radii
 from navi_fractal._regression import (
@@ -312,11 +312,11 @@ def estimate_sandbox_dimension(
     n_actual = max(1, n_centers)
     centers = [rng.randrange(cg.n) for _ in range(n_actual)]
 
-    # BFS mass collection
+    # BFS mass collection (layer counts + prefix sums)
     center_masses: list[list[int]] = []
     for center in centers:
-        distances = bfs_layers(cg, center)
-        masses = [ball_mass(distances, r) for r in radii_list]
+        layer_counts = bfs_layer_counts(cg, center)
+        masses = masses_from_layer_counts(layer_counts, radii_list)
         center_masses.append(masses)
 
     # Moment aggregation using helpers

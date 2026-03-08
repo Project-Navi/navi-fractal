@@ -5,6 +5,7 @@
 from __future__ import annotations
 
 from collections import deque
+from collections.abc import Sequence
 
 from navi_fractal._graph import CompiledGraph
 
@@ -24,6 +25,60 @@ def bfs_layers(g: CompiledGraph, source: int) -> list[int]:
                 dist[v] = dist[u] + 1
                 queue.append(v)
     return dist
+
+
+def bfs_layer_counts(g: CompiledGraph, source: int) -> list[int]:
+    """Return layer counts: counts[d] = number of nodes at distance d.
+
+    Uses BFS on the compiled graph's sorted adjacency for determinism.
+    The returned list has length (max_distance + 1). Unreachable nodes
+    are excluded from all counts.
+    """
+    dist = [-1] * g.n
+    dist[source] = 0
+    queue: deque[int] = deque([source])
+    max_dist = 0
+    while queue:
+        u = queue.popleft()
+        for v in g.adj[u]:
+            if dist[v] == -1:
+                d = dist[u] + 1
+                dist[v] = d
+                if d > max_dist:
+                    max_dist = d
+                queue.append(v)
+
+    counts = [0] * (max_dist + 1)
+    for d in dist:
+        if d >= 0:
+            counts[d] += 1
+    return counts
+
+
+def masses_from_layer_counts(
+    layer_counts: list[int],
+    radii: Sequence[int],
+) -> list[int]:
+    """Compute ball masses at each radius from layer counts using prefix sums.
+
+    For each radius r, mass = sum of layer_counts[0..r] (inclusive).
+    Radii beyond the maximum distance get the total reachable count.
+    """
+    # Build prefix sums: prefix[i] = sum(layer_counts[0..i])
+    n_layers = len(layer_counts)
+    prefix = [0] * n_layers
+    prefix[0] = layer_counts[0]
+    for i in range(1, n_layers):
+        prefix[i] = prefix[i - 1] + layer_counts[i]
+
+    total = prefix[-1]
+    masses = []
+    for r in radii:
+        if r >= n_layers:
+            masses.append(total)
+        else:
+            masses.append(prefix[r])
+    return masses
 
 
 def ball_mass(distances: list[int], radius: int) -> int:

@@ -5,7 +5,13 @@
 from __future__ import annotations
 
 from navi_fractal import Graph, compile_to_undirected_metric_graph
-from navi_fractal._bfs import ball_mass, bfs_layers, estimate_diameter
+from navi_fractal._bfs import (
+    ball_mass,
+    bfs_layer_counts,
+    bfs_layers,
+    estimate_diameter,
+    masses_from_layer_counts,
+)
 
 
 class TestBfsLayers:
@@ -37,6 +43,76 @@ class TestBfsLayers:
         cg = compile_to_undirected_metric_graph(g)
         dist = bfs_layers(cg, 0)
         assert dist == [0]
+
+
+class TestBfsLayerCounts:
+    def test_path_layer_counts(self) -> None:
+        g = Graph()
+        for i in range(5):
+            if i > 0:
+                g.add_edge(i, i - 1)
+        cg = compile_to_undirected_metric_graph(g)
+        node_0_id = cg.label_to_id[0]
+        counts = bfs_layer_counts(cg, node_0_id)
+        # Path from end: 1 node at each distance 0..4
+        assert counts == [1, 1, 1, 1, 1]
+        assert sum(counts) == 5
+
+    def test_star_layer_counts(self) -> None:
+        """Star graph: center has all nodes at distance 1."""
+        g = Graph()
+        for i in range(1, 6):
+            g.add_edge(0, i)
+        cg = compile_to_undirected_metric_graph(g)
+        center_id = cg.label_to_id[0]
+        counts = bfs_layer_counts(cg, center_id)
+        assert counts == [1, 5]
+
+    def test_single_node_layer_counts(self) -> None:
+        g = Graph()
+        g.add_node(0)
+        cg = compile_to_undirected_metric_graph(g)
+        counts = bfs_layer_counts(cg, 0)
+        assert counts == [1]
+
+    def test_agrees_with_bfs_layers(self) -> None:
+        """Layer counts must produce the same masses as the distance-array approach."""
+        g = Graph()
+        for i in range(10):
+            if i > 0:
+                g.add_edge(i, i - 1)
+        # Add a branch
+        g.add_edge(3, 10)
+        g.add_edge(10, 11)
+        cg = compile_to_undirected_metric_graph(g)
+
+        for center in range(cg.n):
+            dist = bfs_layers(cg, center)
+            counts = bfs_layer_counts(cg, center)
+            radii = list(range(1, max(dist) + 2))
+
+            old_masses = [ball_mass(dist, r) for r in radii]
+            new_masses = masses_from_layer_counts(counts, radii)
+            assert old_masses == new_masses, f"center={center}"
+
+
+class TestMassesFromLayerCounts:
+    def test_simple(self) -> None:
+        # counts[0]=1 (source), counts[1]=3, counts[2]=2
+        counts = [1, 3, 2]
+        assert masses_from_layer_counts(counts, [0]) == [1]
+        assert masses_from_layer_counts(counts, [1]) == [4]
+        assert masses_from_layer_counts(counts, [2]) == [6]
+        assert masses_from_layer_counts(counts, [0, 1, 2]) == [1, 4, 6]
+
+    def test_radius_beyond_max(self) -> None:
+        counts = [1, 2]
+        # Radius 5 is beyond max distance 1, should return total
+        assert masses_from_layer_counts(counts, [5]) == [3]
+
+    def test_multiple_radii(self) -> None:
+        counts = [1, 1, 1, 1, 1]  # path: 1 node at each distance
+        assert masses_from_layer_counts(counts, [0, 1, 2, 3, 4]) == [1, 2, 3, 4, 5]
 
 
 class TestBallMass:

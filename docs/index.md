@@ -4,8 +4,6 @@ hide:
   - toc
 ---
 
-<div class="hero-glow" markdown>
-
 # navi-fractal
 
 **Audit-grade fractal dimension estimation for graphs.**
@@ -14,8 +12,6 @@ Zero runtime dependencies. Refuses to emit a dimension without positive evidence
 
 [Get Started](getting-started/quickstart.md){ .md-button .md-button--primary }
 [API Reference](reference/api.md){ .md-button }
-
-</div>
 
 ---
 

@@ -119,11 +119,11 @@ result = estimate_sandbox_dimension(g, component_policy="all")
 
 **When to use each:**
 
-- `"giant"` (default) -- Best for most networks. Satellite components distort
+- `"giant"` (default) --- Best for most networks. Satellite components distort
   ball-mass averages because BFS from a node in a small component saturates
   immediately. The giant component typically carries the fractal structure.
 
-- `"all"` -- Use when your graph is connected by construction (e.g., a
+- `"all"` --- Use when your graph is connected by construction (e.g., a
   deterministic fractal like a Sierpinski graph) or when you specifically want
   to include all components in the measurement. If the graph is already
   connected, both policies produce identical results.

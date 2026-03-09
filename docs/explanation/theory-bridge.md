@@ -17,7 +17,7 @@ For the \( (u,v) \)-flower network family (Rozenfeld, Havlin & ben-Avraham, NJP
 This limit is the fractal dimension \( d_B \) of the flower family. The proof is
 written in Lean 4 with Mathlib, compiled against Lean 4.28.0, and contains
 zero `sorry` stubs (unproved obligations) and zero custom axioms. The Lean
-compiler is the final arbiter -- the proof type-checks or it doesn't. There
+compiler is the final arbiter --- the proof type-checks or it doesn't. There
 is no gap between "we believe this is true" and "this is true": the statement
 follows from the axioms of the type theory by mechanical verification.
 
@@ -58,7 +58,7 @@ family of graphs.
 **fd-formalization** proves the *global* log-ratio: the ratio of
 \( \log(\text{total vertex count}) \) to \( \log(\text{hub-to-hub distance}) \)
 converges to \( \frac{\log w}{\log u} \) as the generation grows. This is a
-statement about two specific scalars -- the total size of the graph and the
+statement about two specific scalars --- the total size of the graph and the
 diameter of its backbone. The proof is exact and holds for every generation
 simultaneously (via the squeeze bounds).
 
@@ -67,14 +67,14 @@ simultaneously (via the squeeze bounds).
 centers, in the best scaling window. This is a statistical estimate derived
 from many BFS measurements at many radii, filtered through quality gates.
 
-In the infinite-size limit, these two quantities converge -- both equal the
+In the infinite-size limit, these two quantities converge --- both equal the
 box-counting dimension \( d_B \). This is a theorem in the fractal networks
 literature (Song, Havlin & Makse, Nature 433:392, 2005), though not one that
 fd-formalization has formalized (the proof requires metric space machinery
 beyond what the current formalization covers).
 
 On finite graphs, they differ. The sandbox systematically underestimates.
-This is not a flaw in either method -- it is a consequence of measuring
+This is not a flaw in either method --- it is a consequence of measuring
 different geometric quantities on a finite object. The global log-ratio
 converges from above (the vertex count slightly exceeds what pure power-law
 scaling would predict), while the local mass-radius slope is pulled down by
@@ -107,7 +107,7 @@ is expected and is not a deficiency of either method:
   sampling, saturation filtering, and the geometric difference between "total
   count at a fixed distance" and "average ball mass across random centers."
 - Each of these contributions adds variance and bias that the theoretical
-  bound does not account for (and should not -- it describes a different
+  bound does not account for (and should not --- it describes a different
   quantity).
 
 The convergence analysis script (`scripts/convergence_analysis.py`) fits
@@ -120,8 +120,8 @@ the calibration report and produces a structured comparison.
 The calibration table (see [Calibration Regime](calibration-regime.md)) is
 where the two projects meet concretely. The analytical dimension \( d_B \) comes
 from the formula that fd-formalization proves. The sandbox dimension \( D \) comes
-from navi-fractal's measurement pipeline. The gap between them -- documented
-openly, not hidden -- is the empirical cost of measuring a local quantity on
+from navi-fractal's measurement pipeline. The gap between them --- documented
+openly, not hidden --- is the empirical cost of measuring a local quantity on
 a finite graph.
 
 The calibration is not a correction factor. navi-fractal does not adjust its

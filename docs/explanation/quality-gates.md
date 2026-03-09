@@ -20,7 +20,7 @@ of the variance in \( \log M \) is explained by the linear relationship with \( 
 
 **Why it exists**: A low \( R^2 \) means the data points in the window don't
 follow a straight line in log-log space. If \( \log M \) vs \( \log r \) isn't linear,
-the "dimension" extracted from the slope is not meaningful -- you're fitting a
+the "dimension" extracted from the slope is not meaningful --- you're fitting a
 line to something that isn't a line. The 0.85 default is deliberately
 permissive; most genuine fractal networks produce \( R^2 \) above 0.99 in
 their best windows. The threshold exists to catch clear non-power-law
@@ -85,12 +85,12 @@ log-log space:
 
 If the quadratic model's AICc is more than `delta_quadratic_win` lower than
 the linear model's AICc, the window is rejected. The quadratic has one extra
-parameter, so AICc already penalizes it for complexity -- if it still wins
+parameter, so AICc already penalizes it for complexity --- if it still wins
 convincingly, there is genuine curvature in the data.
 
 **Why it exists**: True power-law scaling produces a straight line in log-log
 space. Curvature (a bend) indicates that the scaling exponent is changing
-across the window -- you're not in a single scaling regime. This happens
+across the window --- you're not in a single scaling regime. This happens
 naturally at the boundaries of the fractal scaling range: at small radii the
 discrete lattice structure dominates, and at large radii saturation effects
 (running out of graph) flatten the curve. The curvature guard forces the
@@ -121,7 +121,7 @@ compute the range (max - min) of the resulting slopes. If this range exceeds
 **Why it exists**: A stable fractal dimension should look roughly the same
 regardless of which part of the scaling window you examine. If the slope
 changes dramatically from the left half to the right half of the window, the
-"dimension" is not a stable property of the network -- it's an artifact of
+"dimension" is not a stable property of the network --- it's an artifact of
 which radii you happened to include. This gate catches networks with multiple
 scaling regimes (different dimensions at different length scales) and windows
 that straddle two regimes.
@@ -147,7 +147,7 @@ passed, this gate rejects windows where the best-fit slope is zero or
 negative.
 
 **Why it exists**: In a connected graph, ball mass is a monotonically
-non-decreasing function of radius -- you can only reach more nodes by
+non-decreasing function of radius --- you can only reach more nodes by
 looking farther. A negative slope in log-log space would mean mass
 *decreases* with radius, which is geometrically impossible in a single
 connected component. If the aggregated data shows a negative slope, something
@@ -171,14 +171,14 @@ space: \( \max(\log M) - \min(\log M) \) across the radii in the window. If this
 span is less than `min_delta_y`, the window is skipped.
 
 **Why it exists**: When ball mass barely changes across a range of radii --
-a nearly flat region in log-log space -- the slope estimate becomes
+a nearly flat region in log-log space --- the slope estimate becomes
 unreliable. A tiny vertical span means the signal-to-noise ratio is poor:
 small perturbations in mass produce large changes in the fitted slope. The
 `min_delta_y` threshold ensures that the window contains enough "dynamic
 range" in mass growth for the slope to be meaningful.
 
 The default of 0.5 corresponds to a mass ratio of about \( e^{0.5} \approx 1.65\times \) from
-the smallest to largest radius in the window. This is conservative -- most
+the smallest to largest radius in the window. This is conservative --- most
 genuine scaling windows show mass changing by orders of magnitude.
 
 **How it interacts with other gates**: The delta-y check is applied early in

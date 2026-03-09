@@ -1,6 +1,6 @@
 # Interpreting Results
 
-Every call to `estimate_sandbox_dimension` returns a `SandboxResult` -- a frozen
+Every call to `estimate_sandbox_dimension` returns a `SandboxResult` --- a frozen
 dataclass containing the dimension estimate (or refusal), the full model
 diagnostics, and enough raw data to reproduce the measurement independently.
 
@@ -29,7 +29,7 @@ be `None`. Always check `reason` first.
 
 The AICc comparison is the heart of model selection. A `delta_aicc` of 5 or more
 is conventionally considered strong evidence for the preferred model. Values between
-1.5 and 5 indicate marginal preference -- the measurement is accepted, but treat
+1.5 and 5 indicate marginal preference --- the measurement is accepted, but treat
 it with appropriate caution.
 
 ### LinFit fields
@@ -47,7 +47,7 @@ Both `powerlaw_fit` and `exponential_fit` are `LinFit` dataclasses with these fi
 
 ## Window metrics
 
-These fields describe the scaling window that the estimator selected -- the
+These fields describe the scaling window that the estimator selected --- the
 contiguous range of radii where the log-log relationship was evaluated.
 
 | Field | Type | Meaning |
@@ -101,13 +101,13 @@ prompt closer inspection before relying on a dimension estimate:
 
 | Signal | What it means |
 |--------|--------------|
-| \( R^2 < 0.95 \) | Weak power-law fit -- the log-log relationship has substantial scatter. The dimension estimate may be unreliable. |
-| \( \Delta\text{AICc} < 5 \) | Marginal model preference -- the exponential model fits nearly as well as the power law. Consider whether power-law scaling is genuinely present. |
-| \( \log\text{-span} < 0.5 \) | Narrow scaling window -- the estimate is based on less than half a decade of radii. Small windows can produce good \( R^2 \) values by chance. |
+| \( R^2 < 0.95 \) | Weak power-law fit --- the log-log relationship has substantial scatter. The dimension estimate may be unreliable. |
+| \( \Delta\text{AICc} < 5 \) | Marginal model preference --- the exponential model fits nearly as well as the power law. Consider whether power-law scaling is genuinely present. |
+| \( \log\text{-span} < 0.5 \) | Narrow scaling window --- the estimate is based on less than half a decade of radii. Small windows can produce good \( R^2 \) values by chance. |
 | `retained_fraction < 0.5` | Most nodes were disconnected from the giant component. The measurement reflects the largest fragment, not the whole graph. |
 | `bootstrap_valid_reps < 20` | Too few valid bootstrap replicates to produce a reliable confidence interval. The CI bounds may be misleading. |
 
-These are not automatic rejection criteria -- the built-in gates and the post-hoc
+These are not automatic rejection criteria --- the built-in gates and the post-hoc
 quality gate handle that. They are diagnostic signals that help you decide how
 much weight to place on a given measurement in your analysis.
 

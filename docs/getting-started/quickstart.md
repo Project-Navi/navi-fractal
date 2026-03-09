@@ -26,7 +26,7 @@ decides whether the scaling evidence is strong enough to emit a dimension estima
 
 When the gates pass, `result.dimension` holds the power-law slope and
 `result.reason` is `Reason.ACCEPTED`. Every other field on the result provides
-the audit trail -- the raw data, the fit diagnostics, and the window metrics
+the audit trail --- the raw data, the fit diagnostics, and the window metrics
 that led to this conclusion.
 
 ## When measurement is refused
@@ -46,7 +46,7 @@ print(result.reason.value)  # trivial_graph
 ```
 
 When `dimension` is `None`, the instrument is telling you it found no credible
-evidence of power-law scaling. This is not an error -- it is the correct output.
+evidence of power-law scaling. This is not an error --- it is the correct output.
 The `reason` field gives you a machine-readable code explaining exactly why the
 measurement was refused.
 
@@ -61,7 +61,7 @@ Some common refusal reasons:
 | `curvature_guard` | The log-log plot has significant curvature (quadratic beats linear) |
 
 The refusal is the feature. A tool that always produces a number is not a
-measurement instrument -- it is a number generator. navi-fractal earns your trust
+measurement instrument --- it is a number generator. navi-fractal earns your trust
 by staying silent when the evidence is not there.
 
 ## Confidence intervals
@@ -80,7 +80,7 @@ giving you a 95% interval for the dimension estimate.
 
 The `bootstrap_valid_reps` field tells you how many replicates produced valid
 fits. If this number is low relative to `bootstrap_reps`, the confidence interval
-may be unreliable -- see [Interpreting Results](interpreting-results.md) for
+may be unreliable --- see [Interpreting Results](interpreting-results.md) for
 guidance on what to watch for.
 
 ## Bring your own graph
@@ -97,13 +97,13 @@ with open("edges.csv") as f:
 result = estimate_sandbox_dimension(g, seed=42)
 ```
 
-`Graph` accepts any hashable type as node labels -- strings, integers, tuples,
+`Graph` accepts any hashable type as node labels --- strings, integers, tuples,
 whatever your data uses. Edges are undirected and self-loops are silently ignored.
 When you pass a `Graph` to the estimator, it compiles it into a frozen internal
 representation with deterministic traversal order before measurement begins.
 
-For more loading patterns -- NetworkX interop, adjacency matrices, and large-scale
-graphs -- see the how-to guides.
+For more loading patterns --- NetworkX interop, adjacency matrices, and large-scale
+graphs --- see the how-to guides.
 
 ## Post-hoc quality gate
 
@@ -139,7 +139,7 @@ mix a preset with custom values for specific checks.
 
 ## What's next
 
-- **[Interpreting Results](interpreting-results.md)** -- a field-by-field guide
+- **[Interpreting Results](interpreting-results.md)** --- a field-by-field guide
   to every value on `SandboxResult`, including red flags and what they mean.
-- **How-to guides** -- advanced usage patterns including NetworkX interop,
+- **How-to guides** --- advanced usage patterns including NetworkX interop,
   custom radii schedules, and null-model comparison.

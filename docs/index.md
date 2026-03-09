@@ -31,7 +31,7 @@ print(f"D = {result.dimension:.3f}")  # D = 1.620
 
 ## The refusal is the feature
 
-If your network doesn't have fractal structure, you don't get a number -- you get a machine-readable refusal with the exact reason why.
+If your network doesn't have fractal structure, you don't get a number --- you get a machine-readable refusal with the exact reason why.
 
 ```
 Complete graph K50    → Refused: trivial_graph
@@ -53,10 +53,25 @@ Every result passes through a chain of statistical gates before emission:
 | **Curvature guard** | Reject windows where quadratic fits better |
 | **Slope stability** | Reject windows with high local slope dispersion |
 
-If any gate fails: `dimension=None`, `reason=<why>`. Every result -- accepted or refused -- is a frozen dataclass with the full audit trail.
+If any gate fails: `dimension=None`, `reason=<why>`. Every result --- accepted or refused --- is a frozen dataclass with the full audit trail.
 
 ## Calibrated against ground truth
 
 Sandbox estimates are validated against (u,v)-flower networks with exact analytical dimensions, proved in Lean 4 by [fd-formalization](https://github.com/Project-Navi/fd-formalization).
 
 [See the calibration table →](explanation/calibration-regime.md)
+
+## Citing this project
+
+```bibtex
+@software{spence2026navifractal,
+  author = {Spence, Nelson},
+  title = {navi-fractal: Audit-grade fractal dimension estimation for graphs},
+  year = {2026},
+  url = {https://github.com/Project-Navi/navi-fractal}
+}
+```
+
+## License
+
+navi-fractal is released under the [Apache 2.0 License](https://github.com/Project-Navi/navi-fractal/blob/main/LICENSE).

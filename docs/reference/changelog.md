@@ -2,7 +2,7 @@
 
 All notable changes to navi-fractal will be documented here.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/).
+This project uses [git-cliff](https://git-cliff.org/) to generate changelogs from [conventional commits](https://www.conventionalcommits.org/). See also [Releases](https://github.com/Project-Navi/navi-fractal/releases) on GitHub.
 
 ## 0.1.0 (Unreleased)
 

@@ -142,11 +142,11 @@ Available overrides: `r2_min`, `stderr_max`, `min_log_span`, `radius_ratio_min`,
 
 `sandbox_quality_gate` returns a 3-tuple:
 
-- `passed` (`bool`) -- whether the result meets all thresholds.
-- `reason` (`QualityGateReason`) -- an enum value. `PASSED` if accepted, or a
+- `passed` (`bool`) --- whether the result meets all thresholds.
+- `reason` (`QualityGateReason`) --- an enum value. `PASSED` if accepted, or a
   specific failure reason: `NOT_ACCEPTED`, `R2_TOO_LOW`, `STDERR_TOO_HIGH`,
   `LOG_SPAN_TOO_SMALL`, `RADIUS_RATIO_TOO_SMALL`, `AICC_MARGIN_TOO_SMALL`.
-- `detail` (`str | None`) -- a human-readable explanation of the failure, or
+- `detail` (`str | None`) --- a human-readable explanation of the failure, or
   `None` if passed.
 
 ### Typical workflow

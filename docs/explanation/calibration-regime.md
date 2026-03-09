@@ -13,7 +13,7 @@ is to characterize that error against known standards, not to pretend it
 doesn't exist.
 
 The sandbox method's systematic underestimation has a clear geometric origin:
-on a finite graph, BFS balls near the boundary are truncated -- they run out
+on a finite graph, BFS balls near the boundary are truncated --- they run out
 of graph before they run out of radius. This pulls the average ball mass down
 at large radii, which flattens the log-log slope, which depresses the
 estimated dimension. The effect is worse on small graphs (more boundary
@@ -83,7 +83,7 @@ happens:
 
 2. At gen 8 (43,692 nodes), the graph is larger and the potential radius
    range is wider. But the wider range also reveals curvature that wasn't
-   visible at gen 7 -- the scaling behavior bends at large radii due to
+   visible at gen 7 --- the scaling behavior bends at large radii due to
    saturation effects that scale differently from the hub structure. The
    curvature guard correctly rejects the widest windows. The scoring function
    then selects the widest surviving window, which happens to have a slightly
@@ -92,7 +92,7 @@ happens:
 3. The scoring function's lexicographic preference for wide windows is
    working as designed. At gen 8, the widest curvature-clean window is
    different from the one that would minimize the gap to the analytical
-   dimension. The algorithm doesn't know the analytical dimension -- it
+   dimension. The algorithm doesn't know the analytical dimension --- it
    is optimizing for measurement quality (wide window, high \( R^2 \), low
    stderr), not for proximity to a number it doesn't have access to.
 
@@ -136,10 +136,10 @@ should not have a finite fractal dimension are correctly refused:
   leaving insufficient radii for window construction.
 - **Complete graphs**: refused with `trivial_graph`. Diameter is 1.
 - **(1,2)-flower** (transfractal, \( u = 1 \)): refused with `no_valid_radii`.
-  With \( u = 1 \), the hub distance is \( L_g = 1 \) for all generations -- the network
+  With \( u = 1 \), the hub distance is \( L_g = 1 \) for all generations --- the network
   grows but doesn't stretch. Ball-mass growth saturates too rapidly for any
   meaningful radius sequence.
 
 These refusals are as important as the acceptances. A fractal dimension tool
-that reports \( D = 2.3 \) for a Barabási-Albert network is worse than useless -- it
+that reports \( D = 2.3 \) for a Barabási-Albert network is worse than useless --- it
 gives false confidence. The refusal is the feature.

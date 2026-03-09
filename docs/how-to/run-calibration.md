@@ -15,7 +15,7 @@ can verify that navi-fractal matches or improves on its predecessor.
 
 ## The (u,v)-flower family
 
-The primary calibration targets are **(u,v)-flower graphs** -- deterministic
+The primary calibration targets are **(u,v)-flower graphs** --- deterministic
 recursive networks built by edge replacement. At each generation, every edge is
 replaced by two parallel paths of length u and v. The resulting graph has an
 exact box-counting dimension:
@@ -100,13 +100,13 @@ guess whether a positive gap means overestimate or underestimate.
 
 A list of per-graph entries. Each entry contains:
 
-- `label`, `family`, `group`, `expect` -- graph identity and expected behavior.
-- `analytical_d` -- the exact dimension (null for non-fractal controls).
-- `v4` and `nf` -- full result objects for each backend, including `dimension`,
+- `label`, `family`, `group`, `expect` --- graph identity and expected behavior.
+- `analytical_d` --- the exact dimension (null for non-fractal controls).
+- `v4` and `nf` --- full result objects for each backend, including `dimension`,
   `reason`, `r2`, `slope`, `slope_stderr`, `window_r_min`, `window_r_max`,
   `window_log_span`, `window_delta_y`, `delta_aicc`, `elapsed_s`, and
   `n_nodes`.
-- `deltas` -- pre-computed differences: `dimension_delta` (nf minus v4),
+- `deltas` --- pre-computed differences: `dimension_delta` (nf minus v4),
   `r2_delta`, `analytical_gap_v4`, `analytical_gap_nf`, `gap_pct_v4`,
   `gap_pct_nf`.
 
@@ -166,7 +166,7 @@ For each flower family, the script:
    than 1 are expected because the sandbox measures a different geometric
    quantity (local ball-mass scaling) than the global log-ratio proved in the
    formalization.
-5. Checks monotonicity -- whether the absolute gap shrinks at every generation
+5. Checks monotonicity --- whether the absolute gap shrinks at every generation
    step. Non-monotonic convergence (flagged as `WARN`) is a legitimate outcome
    of window selection, not a bug.
 
@@ -219,7 +219,7 @@ specs.append(
 
 ### Step 2: Write a constructor
 
-Add a builder function that returns `(V4Graph, NFGraph, int)` -- both graph
+Add a builder function that returns `(V4Graph, NFGraph, int)` --- both graph
 representations and the node count:
 
 ```python

@@ -15,14 +15,14 @@ M(r) \sim r^D
 
 The exponent \( D \) is the fractal dimension. If you plot \( \log M(r) \)
 against \( \log r \) and see a straight line, the slope of that line is \( D \).
-If you don't see a straight line, the graph probably isn't fractal -- and
+If you don't see a straight line, the graph probably isn't fractal --- and
 navi-fractal will refuse to report a dimension rather than giving you a
 meaningless number.
 
 The sandbox method works by picking random centers, measuring ball masses at
 a range of radii, and looking for the radius window where the power-law
 relationship holds most convincingly. The key insight is that *not every radius
-range will show clean scaling* -- boundary effects dominate at large radii,
+range will show clean scaling* --- boundary effects dominate at large radii,
 discretization noise dominates at small radii, and the interesting scaling
 regime lives somewhere in between. The pipeline's job is to find that regime
 or to conclude that it doesn't exist.
@@ -31,7 +31,7 @@ or to conclude that it doesn't exist.
 
 ### Step 1: Graph compilation
 
-The input graph -- whatever form it arrives in -- is compiled into a
+The input graph --- whatever form it arrives in --- is compiled into a
 `CompiledGraph`: a sorted adjacency list with integer node IDs. This
 compilation step is not just a convenience. By sorting the adjacency list
 for every node, the BFS traversal order becomes deterministic regardless
@@ -57,7 +57,7 @@ ball masses at large radii and distort the scaling window.
 The graph diameter is estimated using a **two-sweep BFS heuristic**: run BFS
 from node 0 to find the farthest node, then run BFS again from that node and
 take the maximum distance. This gives an exact diameter on trees and a tight
-lower bound on general graphs -- good enough for choosing radius ranges. If
+lower bound on general graphs --- good enough for choosing radius ranges. If
 the estimated diameter is 1 or less, the graph is too trivial to measure and
 is refused.
 
@@ -111,7 +111,7 @@ Before window search, radii where the effective mean mass exceeds
 `max_saturation_frac` (default 0.95) times the total node count are removed.
 These saturated points would pull the slope toward zero and contaminate the
 fit. Radii where the effective mass is 1 or less (beyond radius 1) are also
-removed -- they contribute no information.
+removed --- they contribute no information.
 
 ### Step 8: Window search
 
@@ -161,7 +161,7 @@ dimension. The delta-AICc distribution is also captured.
 
 ### Step 10: Result
 
-The pipeline returns a `SandboxResult` -- a frozen dataclass containing either
+The pipeline returns a `SandboxResult` --- a frozen dataclass containing either
 a dimension estimate (with full diagnostics) or a refusal with a machine-readable
 `Reason` code. Every intermediate quantity is preserved: radii, masses, fits,
 window bounds, AICc scores, bootstrap counts. Nothing is hidden.

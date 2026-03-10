@@ -51,11 +51,25 @@ Every result passes through a chain of statistical gates before emission:
 
 If any gate fails: `dimension=None`, `reason=<why>`. Every result --- accepted or refused --- is a frozen dataclass with the full audit trail.
 
-## Calibrated against ground truth
+## Formally verified foundations
 
-Sandbox estimates are validated against (u,v)-flower networks with exact analytical dimensions, proved in Lean 4 by [fd-formalization](https://github.com/Project-Navi/fd-formalization).
+The analytical dimension formula that navi-fractal calibrates against has been
+formally proved in Lean 4 --- machine-checked from axioms, with zero unproved
+obligations and zero custom axioms. The proof is maintained by a companion
+project, [fd-formalization](https://github.com/Project-Navi/fd-formalization),
+and is being [upstreamed into Mathlib](https://github.com/leanprover-community/mathlib4/pull/36443).
 
-[See the calibration table →](explanation/calibration-regime.md)
+This is not "we believe the formula is correct." The Lean compiler verified it.
+
+| What's proved | Status |
+|--------------|--------|
+| Flower dimension \( \lim_{g \to \infty} \frac{\log |V_g|}{\log L_g} = \frac{\log(u+v)}{\log u} \) | Verified |
+| Hub distance \( \text{dist}(\text{hub}_0, \text{hub}_1) = u^g \) | Verified |
+| Vertex count recurrence | Verified |
+| Squeeze convergence bounds | Verified |
+| `SimpleGraph.ball` (graph metric ball) | [PR #36443](https://github.com/leanprover-community/mathlib4/pull/36443) in Mathlib review |
+
+[How the formal proofs connect to the code →](explanation/theory-bridge.md) · [Calibration table →](explanation/calibration-regime.md)
 
 ## Citing this project
 

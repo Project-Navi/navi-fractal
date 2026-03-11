@@ -1,0 +1,3 @@
+[submodule "fd_formalization"]
+	path = fd_formalization
+	url = https://github.com/Project-Navi/fd-formalization.git

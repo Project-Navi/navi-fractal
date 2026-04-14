@@ -38,7 +38,7 @@ Issues = "https://github.com/Project-Navi/navi-fractal/issues"
 
 [dependency-groups]
 dev = [
-    "pytest>=8.0.0",
+    "pytest>=9.0.3",
     "pytest-benchmark>=5.0.0",
     "ruff>=0.9.0",
     "mypy>=1.8.0",
